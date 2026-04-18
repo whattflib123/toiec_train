@@ -21,21 +21,21 @@ In addition, the first 100 customers each day will receive a free TechZone tote 
         text: "What is the purpose of this announcement?",
         options: ["A) To advertise a new product line", "B) To inform customers of a store opening", "C) To announce a change in store hours", "D) To promote a membership program"],
         answer: "B",
-        explanation: "'To inform customers of a store opening' is correct because the announcement explicitly states 'we are thrilled to announce the grand opening of TechZone Electronics at Westfield Shopping Center.' 'To advertise a new product line' is wrong because the announcement is about a store opening event, not the launch of a new product category. 'To announce a change in store hours' is wrong because the store hours mentioned are specific to the sale event, not a change from previous hours. 'To promote a membership program' is wrong because no membership or loyalty program is mentioned anywhere in the announcement."
+        explanation: "「告知顧客門市開幕」是正確答案，因為公告明確寫道「我們非常興奮地宣布 TechZone Electronics 在 Westfield 購物中心盛大開幕」。「宣傳新產品線」是錯誤的，因為公告的主題是門市開幕活動，而非推出新的產品類別。「宣布營業時間變更」是錯誤的，因為文中提到的營業時間是特定於本次特賣活動，並非對原有時間的變更。「推廣會員計畫」是錯誤的，因為公告中完全沒有提到任何會員或忠誠度計畫。"
       },
       {
         id: "p7b_easy_1_q2",
         text: "What will the first 100 customers each day receive?",
         options: ["A) A discount voucher", "B) A free smartphone", "C) A free tote bag", "D) Free parking"],
         answer: "C",
-        explanation: "'A free tote bag' is correct because the announcement states 'the first 100 customers each day will receive a free TechZone tote bag.' 'A discount voucher' is wrong because no voucher is mentioned as a gift for early customers — discounts of up to 40% apply to all sale shoppers. 'A free smartphone' is wrong because smartphones are items being sold at a discount, not given away as gifts. 'Free parking' is wrong because free parking at Level B2 is available to all visitors, not exclusively to the first 100 customers."
+        explanation: "「免費手提袋」是正確答案，因為公告寫道「每天前 100 位顧客將獲得一個免費的 TechZone 手提袋」。「折扣券」是錯誤的，因為文中並未提及贈送折扣券給早到顧客，最高 40% 的折扣是適用於所有特賣期間的購物者。「免費智慧型手機」是錯誤的，因為智慧型手機是以折扣價出售的商品，並非作為贈品發放。「免費停車」是錯誤的，因為 B2 層的免費停車場是開放給所有來店訪客，並非僅限前 100 位顧客。"
       },
       {
         id: "p7b_easy_1_q3",
         text: "How long does the sale last?",
         options: ["A) One week", "B) Three days", "C) Two days", "D) One day"],
         answer: "C",
-        explanation: "'Two days' is correct because the announcement explicitly states the sale runs 'from Saturday, November 5 to Sunday, November 6 only,' which is exactly two days. 'One week' is wrong because the passage clearly limits the sale to a weekend, not a full seven days. 'Three days' is wrong because the sale ends on Sunday — only Saturday and Sunday are included, not a third day. 'One day' is wrong because the sale spans two separate days (Saturday and Sunday), not a single day."
+        explanation: "「兩天」是正確答案，因為公告明確寫道特賣活動「僅限週六 11 月 5 日至週日 11 月 6 日」，正好是兩天。「一週」是錯誤的，因為文章清楚地將特賣活動限制在週末，而非整整七天。「三天」是錯誤的，因為特賣在週日結束，只有週六和週日兩天，並不包含第三天。「一天」是錯誤的，因為特賣橫跨兩個獨立的日期（週六與週日），而非僅一天。"
       }
     ]
   },
@@ -58,21 +58,21 @@ We apologize for the inconvenience and appreciate your patience. The cafeteria i
         text: "Why will the cafeteria be closed?",
         options: ["A) Due to a health inspection", "B) For staff training", "C) For renovations", "D) Due to a holiday"],
         answer: "C",
-        explanation: "'For renovations' is correct because the notice explicitly states 'The company cafeteria will be closed for renovations from Monday, December 4 through Friday, December 8.' 'Due to a health inspection' is wrong because no inspection is mentioned; the closure is a planned renovation. 'For staff training' is wrong because the notice is about a physical renovation of the cafeteria, not a training event. 'Due to a holiday' is wrong because the closure spans a regular work week and is attributed to renovation work, not a public holiday."
+        explanation: "「進行裝修」是正確答案，因為通知明確寫道「公司餐廳將於 12 月 4 日（週一）至 12 月 8 日（週五）期間因裝修而關閉」。「衛生檢查」是錯誤的，因為通知中完全未提及任何檢查，關閉原因是預先安排的裝修工程。「員工培訓」是錯誤的，因為通知說明的是餐廳的實體改建，而非培訓活動。「因假日」是錯誤的，因為關閉時間橫跨正常工作週，且明確歸因於裝修工程，而非國定假日。"
       },
       {
         id: "p7b_easy_2_q2",
         text: "Where can employees eat during the closure?",
         options: ["A) The lobby restaurant", "B) The main parking lot food trucks", "C) A nearby café", "D) The rooftop terrace"],
         answer: "B",
-        explanation: "'The main parking lot food trucks' is correct because the notice states 'food truck vendors will be available in the main parking lot from 11:30 a.m. to 1:30 p.m. daily.' 'The lobby restaurant' is wrong because no lobby restaurant is mentioned in the notice. 'A nearby café' is wrong because the notice does not direct employees to any external café or off-site option. 'The rooftop terrace' is wrong because no rooftop facility is mentioned as an eating option."
+        explanation: "「主停車場的餐車」是正確答案，因為通知寫道「餐車供應商將每日上午 11:30 至下午 1:30 在主停車場提供服務」。「大廳餐廳」是錯誤的，因為通知中完全未提及任何大廳餐廳。「附近的咖啡廳」是錯誤的，因為通知並未引導員工前往任何外部咖啡廳或場外選項。「屋頂露台」是錯誤的，因為通知中沒有提到任何屋頂設施可作為用餐地點。"
       },
       {
         id: "p7b_easy_2_q3",
         text: "What is NOT mentioned as available in the 3rd floor kitchen?",
         options: ["A) A microwave", "B) A refrigerator", "C) A coffee machine", "D) A hot water dispenser"],
         answer: "C",
-        explanation: "'A coffee machine' is correct as the answer because the notice lists the 3rd floor kitchen as having 'a microwave, refrigerator, and hot water dispenser' — a coffee machine is not included. 'A microwave' is wrong because a microwave is explicitly listed as one of the kitchen facilities available. 'A refrigerator' is wrong because a refrigerator is explicitly listed as one of the kitchen facilities available. 'A hot water dispenser' is wrong because a hot water dispenser is explicitly listed as one of the kitchen facilities available."
+        explanation: "「咖啡機」是正確答案，因為通知中列出三樓廚房設備為「微波爐、冰箱及熱水機」，並未包含咖啡機。「微波爐」是錯誤的，因為通知已明確列出微波爐為可用廚房設備之一。「冰箱」是錯誤的，因為通知已明確列出冰箱為可用廚房設備之一。「熱水機」是錯誤的，因為通知已明確列出熱水機為可用廚房設備之一。"
       }
     ]
   },
@@ -99,21 +99,21 @@ Please note that the hotel check-in time is 3:00 p.m. An airport transfer from N
         text: "How long will Ms. Nguyen stay in Tokyo?",
         options: ["A) 5 nights", "B) 6 nights", "C) 7 nights", "D) 8 nights"],
         answer: "C",
-        explanation: "'7 nights' is correct because the confirmation explicitly states the hotel is booked for '7 nights (January 15–22).' '5 nights' is wrong because the booking covers seven nights, from January 15 through January 22, not five. '6 nights' is wrong because counting from January 15 to January 22 gives seven nights, not six. '8 nights' is wrong because the departure date of January 22 marks the end of the stay, making it seven nights total."
+        explanation: "「7 晚」是正確答案，因為確認書明確寫道飯店預訂「7 晚（1 月 15 日至 22 日）」。「5 晚」是錯誤的，因為預訂涵蓋從 1 月 15 日至 22 日，共七晚，而非五晚。「6 晚」是錯誤的，因為從 1 月 15 日計算至 1 月 22 日為七晚，而非六晚。「8 晚」是錯誤的，因為 1 月 22 日的離開日期標誌著住宿的結束，合計為七晚。"
       },
       {
         id: "p7b_easy_3_q2",
         text: "What is included in the hotel booking?",
         options: ["A) Dinner", "B) Breakfast", "C) Airport shuttle and dinner", "D) All meals"],
         answer: "B",
-        explanation: "'Breakfast' is correct because the confirmation states the Superior Room includes 'Breakfast included' as part of the hotel booking. 'Dinner' is wrong because only breakfast is listed as included; dinner is not mentioned. 'Airport shuttle and dinner' is wrong because while an airport transfer is included separately, dinner is not part of the hotel inclusion. 'All meals' is wrong because only breakfast is specified; lunch and dinner are not covered."
+        explanation: "「早餐」是正確答案，因為確認書載明高級客房包含「含早餐」作為飯店預訂的一部分。「晚餐」是錯誤的，因為只有早餐被列為包含項目，晚餐並未提及。「機場接送及晚餐」是錯誤的，因為機場接送雖另外包含，但晚餐並不在飯店包含範圍內。「所有餐點」是錯誤的，因為只有早餐被明確說明，午餐和晚餐均未涵蓋。"
       },
       {
         id: "p7b_easy_3_q3",
         text: "By when must Ms. Nguyen contact SkyFly if she needs changes?",
         options: ["A) At least 24 hours before departure", "B) At least 48 hours before departure", "C) At least 72 hours before departure", "D) At least one week before departure"],
         answer: "B",
-        explanation: "'At least 48 hours before departure' is correct because the confirmation states 'please contact us at 02-2345-6789 at least 48 hours before departure.' 'At least 24 hours before departure' is wrong because the required notice period is 48 hours, which is twice as long as 24 hours. 'At least 72 hours before departure' is wrong because the stated requirement is 48 hours, not 72. 'At least one week before departure' is wrong because one week (168 hours) far exceeds the 48-hour notice requirement stated in the confirmation."
+        explanation: "「至少在出發前 48 小時」是正確答案，因為確認書寫道「請至少在出發前 48 小時聯絡我們」。「至少在出發前 24 小時」是錯誤的，因為所需的通知時間是 48 小時，是 24 小時的兩倍。「至少在出發前 72 小時」是錯誤的，因為規定的要求是 48 小時，而非 72 小時。「至少在出發前一週」是錯誤的，因為一週（168 小時）遠超過確認書中所載的 48 小時通知要求。"
       }
     ]
   },
@@ -138,21 +138,21 @@ HomeComfort Inc. Customer Safety Team`,
         text: "Why is the product being recalled?",
         options: ["A) It has an electrical short circuit", "B) It may overheat and cause burns", "C) It uses too much electricity", "D) Its warranty has expired"],
         answer: "B",
-        explanation: "'It may overheat and cause burns' is correct because the notice states the recall is due to 'a potential overheating issue that may pose a burn risk.' 'It has an electrical short circuit' is wrong because the stated issue is overheating, not a short circuit — these are distinct problems. 'It uses too much electricity' is wrong because energy consumption is not mentioned as the reason for the recall. 'Its warranty has expired' is wrong because warranty expiry is not a safety issue and has nothing to do with the stated recall reason."
+        explanation: "「可能過熱並造成燒傷」是正確答案，因為通知說明召回原因為「可能發生過熱問題，造成燒傷風險」。「有電氣短路」是錯誤的，因為所述問題是過熱，而非短路，兩者是不同的故障類型。「耗電量過大」是錯誤的，因為通知中完全未將能源消耗列為召回原因。「保固期已到期」是錯誤的，因為保固到期並非安全問題，與所述召回原因毫無關聯。"
       },
       {
         id: "p7b_easy_4_q2",
         text: "What must customers provide to get a replacement?",
         options: ["A) Serial number and receipt", "B) A photo of the defect", "C) Nothing; proof of purchase is not required", "D) The original packaging"],
         answer: "C",
-        explanation: "'Nothing; proof of purchase is not required' is correct because the notice explicitly states 'Proof of purchase is not required' when contacting customer service for a free replacement. 'Serial number and receipt' is wrong because while serial numbers identify affected units, the notice waives the proof-of-purchase requirement. 'A photo of the defect' is wrong because no photo documentation is mentioned as a requirement for obtaining a replacement. 'The original packaging' is wrong because the notice does not ask customers to return or provide the original packaging."
+        explanation: "「無需提供任何東西；不需要購買證明」是正確答案，因為通知明確寫道聯絡客服申請免費更換時「不需要提供購買證明」。「序號和收據」是錯誤的，因為雖然序號可識別受影響產品，但通知已豁免購買證明的要求。「故障照片」是錯誤的，因為通知中並未提及需要提供任何照片文件才能獲得更換品。「原始包裝」是錯誤的，因為通知並未要求顧客退還或提供原始包裝。"
       },
       {
         id: "p7b_easy_4_q3",
         text: "Which purchase date is NOT affected by the recall?",
         options: ["A) April 15", "B) July 30", "C) August 31", "D) October 5"],
         answer: "D",
-        explanation: "'October 5' is correct as the answer because the notice states 'Units purchased after September 1 are not affected,' and October 5 falls after September 1. 'April 15' is wrong because April 15 falls within the affected purchase window of March 1 to August 31. 'July 30' is wrong because July 30 also falls within the March 1 to August 31 affected range. 'August 31' is wrong because August 31 is the last day of the affected purchase period and is therefore included in the recall."
+        explanation: "「10 月 5 日」是正確答案，因為通知說明「9 月 1 日之後購買的產品不受影響」，而 10 月 5 日晚於 9 月 1 日。「4 月 15 日」是錯誤的，因為 4 月 15 日落在受影響的購買區間（3 月 1 日至 8 月 31 日）之內。「7 月 30 日」是錯誤的，因為 7 月 30 日同樣落在受影響的 3 月 1 日至 8 月 31 日區間內。「8 月 31 日」是錯誤的，因為 8 月 31 日是受影響購買期間的最後一天，因此仍包含在召回範圍內。"
       }
     ]
   },
@@ -176,21 +176,21 @@ Employees wishing to change their remote work schedule must submit a revised pla
         text: "What changed in the remote work policy?",
         options: ["A) The policy was eliminated", "B) The number of remote days was reduced", "C) Employees may now work remotely up to three days per week", "D) Remote work now requires two managers' approval"],
         answer: "C",
-        explanation: "'Employees may now work remotely up to three days per week' is correct because the update explicitly states employees 'may work remotely up to three days per week, up from the previous limit of two days.' 'The policy was eliminated' is wrong because the policy was updated, not removed — remote work is still permitted. 'The number of remote days was reduced' is wrong because the change went in the opposite direction, increasing the limit from two to three days. 'Remote work now requires two managers' approval' is wrong because the policy requires approval from the direct manager only, with no mention of a second manager."
+        explanation: "「員工現在每週最多可遠端工作三天」是正確答案，因為更新明確說明員工「每週可遠端工作最多三天，較先前的兩天上限有所提升」。「政策已取消」是錯誤的，因為政策是更新而非廢除，遠端工作仍然被允許。「遠端工作天數減少了」是錯誤的，因為變更方向相反，是將上限從兩天增加為三天。「遠端工作現在需要兩位主管批准」是錯誤的，因為政策只要求直屬主管批准，並未提及第二位主管。"
       },
       {
         id: "p7b_easy_5_q2",
         text: "What is one requirement for employees to be eligible?",
         options: ["A) At least two years of employment", "B) A performance rating of 'outstanding'", "C) At least six months of employment", "D) A signed contract extension"],
         answer: "C",
-        explanation: "'At least six months of employment' is correct because the eligibility criteria state employees must 'have completed at least six months of employment.' 'At least two years of employment' is wrong because the required tenure is six months, not two years. 'A performance rating of outstanding' is wrong because the minimum required rating is 'satisfactory or higher,' not specifically 'outstanding.' 'A signed contract extension' is wrong because no contract extension is mentioned as an eligibility condition."
+        explanation: "「至少任職六個月」是正確答案，因為資格條件說明員工必須「已完成至少六個月的任職期」。「至少任職兩年」是錯誤的，因為所需的任職時間是六個月，而非兩年。「績效評等為「優秀」」是錯誤的，因為最低要求的評等是「令人滿意或更高」，而非特定的「優秀」。「簽署合約延展書」是錯誤的，因為政策通知中完全未提及合約延展作為資格條件。"
       },
       {
         id: "p7b_easy_5_q3",
         text: "By what date must employees submit a revised remote work plan?",
         options: ["A) January 15", "B) January 20", "C) February 1", "D) February 15"],
         answer: "B",
-        explanation: "'January 20' is correct because the notice states employees 'must submit a revised plan to HR by January 20.' 'January 15' is wrong because the stated deadline is January 20, not January 15. 'February 1' is wrong because that is the date the updated policy takes effect, not the deadline for submitting a schedule change. 'February 15' is wrong because no February 15 date appears anywhere in the policy notice."
+        explanation: "「1 月 20 日」是正確答案，因為通知說明員工「必須在 1 月 20 日前向人力資源部門提交修訂計畫」。「1 月 15 日」是錯誤的，因為截止日期是 1 月 20 日，而非 1 月 15 日。「2 月 1 日」是錯誤的，因為那是更新後的政策生效日期，而非提交排程變更的截止日期。「2 月 15 日」是錯誤的，因為政策通知中完全沒有出現 2 月 15 日這個日期。"
       }
     ]
   }
@@ -225,28 +225,28 @@ Director of Business Development, NovaBuild Construction`,
         text: "What is the main purpose of this email?",
         options: ["A) To submit a project bid", "B) To propose a business partnership", "C) To follow up on a previous contract", "D) To request credentials from Urban Design"],
         answer: "B",
-        explanation: "'To propose a business partnership' is correct because the email states the writer is contacting Ms. Fontaine 'to propose a collaborative partnership for the upcoming Riverside Urban Renewal Project.' 'To submit a project bid' is wrong because the email is a proposal to partner on a bid, not the bid submission itself. 'To follow up on a previous contract' is wrong because no prior contract between the two firms is mentioned; this is an initial outreach. 'To request credentials from Urban Design' is wrong because Mr. Marsh attaches NovaBuild's own credentials — he does not ask for credentials from the recipient."
+        explanation: "「提出商業合作提案」是正確答案，因為電子郵件說明寄件者聯絡方丹小姐的目的是「為即將到來的河濱都市更新計畫提出合作夥伴關係提案」。「提交專案投標書」是錯誤的，因為這封郵件是提議共同投標的合作邀請，而非投標書本身。「跟進先前的合約」是錯誤的，因為信中未提及兩家公司之間的任何先前合約，這是初次接洽。「向 Urban Design 索取資歷文件」是錯誤的，因為馬許先生隨信附上的是 NovaBuild 自身的公司資歷，而非向對方索取資料。"
       },
       {
         id: "p7b_med_1_q2",
         text: "What does NovaBuild want Urban Design Associates to contribute?",
         options: ["A) Civil engineering expertise", "B) Sustainable architecture and community design", "C) Financial investment", "D) Project management services"],
         answer: "B",
-        explanation: "'Sustainable architecture and community design' is correct because the email states NovaBuild is seeking 'Urban Design's expertise in sustainable architecture and community-centric design to strengthen our bid.' 'Civil engineering expertise' is wrong because NovaBuild itself brings 20 years of civil engineering experience; that is their own contribution, not what they seek. 'Financial investment' is wrong because the email discusses a collaboration to win a contract, not a request for financial capital from Urban Design. 'Project management services' is wrong because project management is not mentioned as the desired contribution from Urban Design."
+        explanation: "「永續建築與社區設計」是正確答案，因為郵件說明 NovaBuild 尋求「Urban Design 在永續建築與以社區為中心的設計方面的專業知識，以強化我們的投標競爭力」。「土木工程專業知識」是錯誤的，因為 NovaBuild 本身具備 20 年的土木工程經驗，那是他們自己的貢獻，而非他們所尋求的。「財務投資」是錯誤的，因為郵件討論的是合作贏得合約，而非向 Urban Design 尋求資金。「專案管理服務」是錯誤的，因為郵件中並未提及專案管理是希望 Urban Design 貢獻的項目。"
       },
       {
         id: "p7b_med_1_q3",
         text: "What is implied about the contract bidding process?",
         options: ["A) NovaBuild has already been awarded the contract", "B) The deadline for submitting a bid is still upcoming", "C) Urban Design has already submitted a competing bid", "D) The city has rejected previous proposals"],
         answer: "B",
-        explanation: "'The deadline for submitting a bid is still upcoming' is correct because the email states 'the submission deadline is November 30' and is dated October 14, meaning the deadline has not yet passed. 'NovaBuild has already been awarded the contract' is wrong because NovaBuild is still trying to strengthen its bid and has not been awarded anything. 'Urban Design has already submitted a competing bid' is wrong because the email proposes partnership with Urban Design, implying they have not yet submitted separately. 'The city has rejected previous proposals' is wrong because no prior rejected proposals are mentioned in the email."
+        explanation: "「投標截止日期尚未到來」是正確答案，因為郵件說明「投標截止日期為 11 月 30 日」，而郵件日期為 10 月 14 日，代表截止日期尚未到達。「NovaBuild 已獲得合約」是錯誤的，因為 NovaBuild 仍在努力強化其投標，尚未獲得任何合約。「Urban Design 已提交競爭性投標」是錯誤的，因為郵件是邀請 Urban Design 合作，暗示他們尚未單獨提交投標。「市政府已拒絕過去的提案」是錯誤的，因為郵件中完全未提及任何先前被拒絕的提案。"
       },
       {
         id: "p7b_med_1_q4",
         text: "What did Mr. Marsh include with his email?",
         options: ["A) A signed partnership agreement", "B) A project brief and company credentials", "C) A financial analysis", "D) Letters of recommendation"],
         answer: "B",
-        explanation: "'A project brief and company credentials' is correct because the email states 'I have attached a preliminary project brief and our company credentials for your review.' 'A signed partnership agreement' is wrong because the email is proposing a partnership, not confirming one with a signed document. 'A financial analysis' is wrong because no financial analysis is mentioned among the attached documents. 'Letters of recommendation' is wrong because the email mentions credentials, not letters of recommendation from third parties."
+        explanation: "「專案說明書和公司資歷文件」是正確答案，因為郵件說明「我已附上初步的專案說明書及我們的公司資歷文件供您參閱」。「已簽署的合作協議」是錯誤的，因為郵件是在提議合作關係，而非以簽署文件確認合作。「財務分析報告」是錯誤的，因為附件中完全未提及任何財務分析報告。「推薦信」是錯誤的，因為郵件提到的是公司資歷文件，而非第三方出具的推薦信。"
       }
     ]
   },
@@ -269,28 +269,28 @@ Looking ahead, Dr. Santos hints at an ambitious project: "We're working on somet
         text: "How many people currently work in the R&D department?",
         options: ["A) 4", "B) 12", "C) 23", "D) 60"],
         answer: "D",
-        explanation: "'60' is correct because the article states the department 'has grown into a 60-person powerhouse.' '4' is wrong because four was the original team size when the department was founded, not the current number. '12' is wrong because 12 is the number of countries that have adopted the EcoChip, not the department headcount. '23' is wrong because 23 is the number of patents the department holds, not the number of employees."
+        explanation: "「60」是正確答案，因為文章說明該部門「已成長為 60 人的強大團隊」。「4」是錯誤的，因為四人是部門成立之初的原始團隊規模，而非現在的人數。「12」是錯誤的，因為 12 是採用 EcoChip 的國家數量，而非部門人數。「23」是錯誤的，因為 23 是該部門持有的專利數量，而非員工人數。"
       },
       {
         id: "p7b_med_2_q2",
         text: "When did Dr. Santos join the company?",
         options: ["A) Ten years ago", "B) Nine years ago", "C) When the department was founded", "D) After winning the Global Innovation Award"],
         answer: "B",
-        explanation: "'Nine years ago' is correct because the article explicitly states 'Dr. Maria Santos joined the company nine years ago as a senior engineer.' 'Ten years ago' is wrong because the department was founded ten years ago, but Dr. Santos joined one year later. 'When the department was founded' is wrong because Dr. Santos joined nine years ago, while the department was founded ten years ago. 'After winning the Global Innovation Award' is wrong because the award was won in 2021, and Dr. Santos joined the company nine years before the article was written."
+        explanation: "「九年前」是正確答案，因為文章明確說明「瑪麗亞·桑托斯博士九年前以高級工程師身分加入公司」。「十年前」是錯誤的，因為部門是十年前成立的，但桑托斯博士是一年後才加入。「部門成立時」是錯誤的，因為桑托斯博士是在九年前加入，而部門成立於十年前。「獲得全球創新獎之後」是錯誤的，因為那個獎項是 2021 年獲得的，而桑托斯博士是在文章撰寫的九年前就加入了公司。"
       },
       {
         id: "p7b_med_2_q3",
         text: "What does Dr. Santos suggest about the department's next project?",
         options: ["A) It involves wearable technology", "B) It is a new version of the EcoChip", "C) It will be announced next quarter", "D) It focuses on energy efficiency"],
         answer: "A",
-        explanation: "'It involves wearable technology' is correct because Dr. Santos states 'We're working on something that will change how people interact with wearable devices.' 'It is a new version of the EcoChip' is wrong because Dr. Santos hints at something new without referencing the EcoChip. 'It will be announced next quarter' is wrong because Dr. Santos says she cannot share details yet, without specifying a next-quarter announcement. 'It focuses on energy efficiency' is wrong because energy efficiency is a feature of the EcoChip, not what is described as the next project."
+        explanation: "「涉及穿戴式技術」是正確答案，因為桑托斯博士說道「我們正在開發一項將改變人們與穿戴裝置互動方式的東西」。「是 EcoChip 的新版本」是錯誤的，因為桑托斯博士暗示的是全新的事物，並未提及 EcoChip。「將在下一季宣布」是錯誤的，因為桑托斯博士表示她尚無法透露細節，但沒有指定下一季的發布時間。「專注於節能」是錯誤的，因為節能是 EcoChip 的特點，而非對下一個專案的描述。"
       },
       {
         id: "p7b_med_2_q4",
         text: "Which of the following best describes the EcoChip?",
         options: ["A) A high-performance graphics processor", "B) An energy-efficient processor used globally", "C) A processor developed for military use", "D) A chip designed for smartphones only"],
         answer: "B",
-        explanation: "'An energy-efficient processor used globally' is correct because the article describes the EcoChip as 'a low-power processor that has been adopted by manufacturers in 12 countries' and used in over 40 million devices worldwide. 'A high-performance graphics processor' is wrong because the EcoChip is described as low-power, and no mention of graphics processing is made. 'A processor developed for military use' is wrong because the article describes consumer and manufacturer adoption, not military applications. 'A chip designed for smartphones only' is wrong because the EcoChip is described as being used across a broad range of devices, not limited to smartphones."
+        explanation: "「在全球廣泛使用的節能處理器」是正確答案，因為文章描述 EcoChip 是「一款低耗電處理器，已被 12 個國家的製造商採用」，並應用於全球逾 4,000 萬台設備中。「高效能圖形處理器」是錯誤的，因為 EcoChip 被描述為低耗電，且文中完全未提及圖形處理功能。「為軍事用途開發的處理器」是錯誤的，因為文章描述的是消費者與製造商的採用情形，並非軍事應用。「僅針對智慧型手機設計的晶片」是錯誤的，因為 EcoChip 被描述為應用於廣泛的裝置類型，並不限於智慧型手機。"
       }
     ]
   },
@@ -353,28 +353,28 @@ Enterprise Sales, SoftWave Inc.`
         text: "Why did Mr. Lau contact SoftWave Inc.?",
         options: ["A) To renew an existing license", "B) To inquire about purchasing an enterprise license", "C) To report a software issue", "D) To request a refund"],
         answer: "B",
-        explanation: "'To inquire about purchasing an enterprise license' is correct because Mr. Lau's email states 'Our company ... is interested in purchasing an enterprise license for DataWave Pro.' 'To renew an existing license' is wrong because the email presents this as a new purchase inquiry, with no mention of an existing relationship with SoftWave. 'To report a software issue' is wrong because no bug or technical problem is mentioned; the email is entirely about pricing and licensing. 'To request a refund' is wrong because no prior purchase has been made — PetroLink is evaluating the product for the first time."
+        explanation: "「詢問購買企業授權」是正確答案，因為劉先生的郵件說明「我們公司有意購買 DataWave Pro 的企業授權」。「更新現有授權」是錯誤的，因為郵件呈現的是全新的購買諮詢，並未提及與 SoftWave 的任何既有關係。「回報軟體問題」是錯誤的，因為郵件中完全未提及任何程式錯誤或技術問題，內容完全圍繞定價和授權。「申請退款」是錯誤的，因為 PetroLink 尚未進行任何購買，目前是首次評估這款產品。"
       },
       {
         id: "p7b_med_3_q2",
         text: "How much would a 115-user license cost per user per year?",
         options: ["A) $282", "B) $280", "C) $270", "D) $265"],
         answer: "C",
-        explanation: "'$270' is correct because Sandra's reply specifies '115-user tier: $31,000/year ($270 per user).' '$282' is wrong because that is the per-user cost for the 85-user tier, not the 115-user tier. '$280' is wrong because that is the per-user cost for the 100-user tier. '$265' is wrong because no $265 per-user rate appears in the pricing table provided."
+        explanation: "「$270」是正確答案，因為桑德拉的回覆明確說明「115 位使用者方案：每年 $31,000（每位使用者 $270）」。「$282」是錯誤的，因為那是 85 位使用者方案的每人費用，而非 115 位使用者方案。「$280」是錯誤的，因為那是 100 位使用者方案的每人費用。「$265」是錯誤的，因為所提供的定價表中完全沒有每人 $265 的費率。"
       },
       {
         id: "p7b_med_3_q3",
         text: "What is included in the enterprise license at no extra cost?",
         options: ["A) On-site training", "B) Video tutorials and documentation", "C) 30-day pilot and on-site training", "D) A dedicated account manager"],
         answer: "B",
-        explanation: "'Video tutorials and documentation' is correct because Sandra's reply states 'A full library of video tutorials and documentation is included with all enterprise licenses at no extra cost.' 'On-site training' is wrong because on-site training is explicitly listed as an additional service costing $2,500 per day. '30-day pilot and on-site training' is wrong because while the pilot is free, on-site training carries an additional fee. 'A dedicated account manager' is wrong because no dedicated account manager is mentioned as an inclusion with the enterprise license."
+        explanation: "「教學影片和說明文件」是正確答案，因為桑德拉的回覆說明「完整的教學影片資料庫和說明文件已免費包含在所有企業授權中」。「現場培訓」是錯誤的，因為現場培訓被明確列為額外服務，每天收費 $2,500。「30 天試用和現場培訓」是錯誤的，因為雖然試用期是免費的，但現場培訓仍需額外付費。「專屬客戶經理」是錯誤的，因為回覆中完全未提及企業授權包含專屬客戶經理服務。"
       },
       {
         id: "p7b_med_3_q4",
         text: "What must Mr. Lau do before the pilot can begin?",
         options: ["A) Make an upfront payment", "B) Attend an orientation session", "C) Sign a pilot agreement", "D) Provide a list of all users"],
         answer: "C",
-        explanation: "'Sign a pilot agreement' is correct because Sandra's reply states 'I can have your account set up within 24 hours of receiving a signed pilot agreement.' 'Make an upfront payment' is wrong because the 30-day pilot is offered 'at no charge,' so no payment is needed to start. 'Attend an orientation session' is wrong because no orientation session is mentioned as a prerequisite for beginning the pilot. 'Provide a list of all users' is wrong because the reply only requires a signed pilot agreement, not a user list, to initiate the trial."
+        explanation: "「簽署試用協議」是正確答案，因為桑德拉的回覆說明「收到已簽署的試用協議後，我可以在 24 小時內完成帳號設定」。「預先付款」是錯誤的，因為 30 天試用期「免費提供」，開始試用無需任何付款。「參加說明會」是錯誤的，因為回覆中完全未提及說明會是開始試用的前提條件。「提供所有使用者名單」是錯誤的，因為回覆只要求已簽署的試用協議，而非使用者名單，即可啟動試用。"
       }
     ]
   },
@@ -426,28 +426,28 @@ Senior Data Analyst`
         text: "What is one benefit of the new office mentioned in the announcement?",
         options: ["A) Free parking for all employees", "B) An on-site cafeteria", "C) More floor space and modern workstations", "D) A gym and wellness center"],
         answer: "C",
-        explanation: "'More floor space and modern workstations' is correct because the announcement states 'the new office offers 30% more floor space, modern workstations, and improved meeting facilities.' 'Free parking for all employees' is wrong because the announcement states parking fees will actually increase from $80 to $95 per month, and spaces are first-come, first-served. 'An on-site cafeteria' is wrong because no cafeteria is mentioned among the new office's benefits. 'A gym and wellness center' is wrong because no gym or wellness facility is mentioned in the relocation announcement."
+        explanation: "「更大的空間和現代化工作站」是正確答案，因為公告說明「新辦公室提供多出 30% 的使用面積、現代化工作站及改善的會議設施」。「所有員工免費停車」是錯誤的，因為公告說明停車費實際上將從每月 $80 漲至 $95，且車位依先到先得原則分配。「現場餐廳」是錯誤的，因為新辦公室的優點中完全未提及餐廳。「健身房和健康中心」是錯誤的，因為搬遷公告中沒有提到任何健身房或健康設施。"
       },
       {
         id: "p7b_med_4_q2",
         text: "Why is Ms. Reeves concerned about the access card event?",
         options: ["A) She thinks the event is too crowded", "B) She will be away on the date of the event", "C) She does not know where the event is held", "D) She already has an access card"],
         answer: "B",
-        explanation: "'She will be away on the date of the event' is correct because Ms. Reeves states 'I will be traveling for work from March 22 to March 27 and will miss the access card distribution event on March 25.' 'She thinks the event is too crowded' is wrong because Ms. Reeves does not mention overcrowding as a concern. 'She does not know where the event is held' is wrong because the announcement clearly states the event is in the existing conference room, and Ms. Reeves does not express confusion about the location. 'She already has an access card' is wrong because the announcement states all employees need new cards for the new building, and Ms. Reeves is asking how to get hers."
+        explanation: "「她在活動當天不在公司」是正確答案，因為瑞芙斯女士表示「我將在 3 月 22 日至 27 日出差，因此無法參加 3 月 25 日的門禁卡發放活動」。「她認為活動人太多」是錯誤的，因為瑞芙斯女士並未提及人員過多的問題。「她不知道活動地點」是錯誤的，因為公告清楚說明活動在現有會議室舉行，而瑞芙斯女士並未表示對地點感到困惑。「她已經有門禁卡了」是錯誤的，因為公告說明所有員工都需要取得新大樓的新門禁卡，而瑞芙斯女士正是在詢問如何取得她的門禁卡。"
       },
       {
         id: "p7b_med_4_q3",
         text: "What does Ms. Reeves ask about regarding transportation?",
         options: ["A) Whether there is a company shuttle bus", "B) Whether monthly parking fees can be waived", "C) Whether there is secure bicycle storage", "D) Whether there is a nearby train station"],
         answer: "C",
-        explanation: "'Whether there is secure bicycle storage' is correct because Ms. Reeves states 'I currently commute by bicycle ... will there be secure bicycle storage at the new location?' 'Whether there is a company shuttle bus' is wrong because Ms. Reeves does not mention shuttle buses in her email. 'Whether monthly parking fees can be waived' is wrong because Ms. Reeves says she does not need a parking space, so fees are not her concern. 'Whether there is a nearby train station' is wrong because Ms. Reeves commutes by bicycle and asks about bicycle storage, not public transit."
+        explanation: "「是否有安全的自行車停放處」是正確答案，因為瑞芙斯女士表示「我目前騎自行車上班……新地點是否有安全的自行車停放處？」「是否有公司接駁車」是錯誤的，因為瑞芙斯女士的郵件中完全未提及接駁車。「每月停車費是否可豁免」是錯誤的，因為瑞芙斯女士說她不需要停車位，所以停車費並非她的顧慮。「附近是否有火車站」是錯誤的，因為瑞芙斯女士騎自行車通勤，詢問的是自行車停放設施，而非大眾交通。"
       },
       {
         id: "p7b_med_4_q4",
         text: "What concern does Ms. Reeves raise about her team's equipment?",
         options: ["A) The equipment may not work at the new location", "B) She needs to know who will handle moving the equipment", "C) The new office may not have enough space for it", "D) The equipment needs to be upgraded before the move"],
         answer: "B",
-        explanation: "'She needs to know who will handle moving the equipment' is correct because Ms. Reeves asks 'Who should I coordinate with to ensure these are moved safely?' 'The equipment may not work at the new location' is wrong because Ms. Reeves does not raise any concern about compatibility or functionality at the new site. 'The new office may not have enough space for it' is wrong because Ms. Reeves does not question whether there is space for the equipment. 'The equipment needs to be upgraded before the move' is wrong because Ms. Reeves asks about safe transportation, not about any upgrades."
+        explanation: "「她需要知道由誰負責搬運設備」是正確答案，因為瑞芙斯女士詢問「我應該與誰協調，以確保這些設備被安全地移動？」「設備在新地點可能無法正常運作」是錯誤的，因為瑞芙斯女士並未提及任何關於設備在新地點相容性或功能性的疑慮。「新辦公室可能沒有足夠的空間容納設備」是錯誤的，因為瑞芙斯女士並未質疑新辦公室是否有足夠空間放置設備。「設備在搬遷前需要升級」是錯誤的，因為瑞芙斯女士詢問的是安全運輸問題，而非任何設備升級事宜。"
       }
     ]
   }
@@ -480,28 +480,28 @@ For guidance on implementation, refer to the updated AML Procedures Manual (v5.2
         text: "What prompted the updates to AML screening requirements?",
         options: ["A) A major money laundering case at the firm", "B) FATF recommendation amendments and local regulatory updates", "C) An audit finding by external consultants", "D) A request from the board of directors"],
         answer: "B",
-        explanation: "'FATF recommendation amendments and local regulatory updates' is correct because the memo states the changes are required 'in light of recent amendments to the Financial Action Task Force (FATF) recommendations and corresponding updates to local regulatory frameworks.' 'A major money laundering case at the firm' is wrong because no internal incident is cited as the trigger; the changes are driven by external regulatory developments. 'An audit finding by external consultants' is wrong because the memo attributes the changes to FATF updates, not an external audit. 'A request from the board of directors' is wrong because the directive comes from the Global Compliance Division in response to regulatory changes, not from a board request."
+        explanation: "「FATF 建議修訂及當地法規更新」是正確答案，因為備忘錄說明變更的原因是「有鑑於金融行動工作組（FATF）建議的近期修訂及當地法規框架的相應更新」。「公司發生重大洗錢案件」是錯誤的，因為備忘錄中沒有引用任何內部事件作為觸發原因，變更是由外部法規發展所驅動的。「外部顧問的審計發現」是錯誤的，因為備忘錄將變更歸因於 FATF 更新，而非外部審計結果。「董事會的要求」是錯誤的，因為指令來自全球合規部門以回應法規變更，並非源於董事會的要求。"
       },
       {
         id: "p7b_hard_1_q2",
         text: "Which of the following represents a change from previous requirements?",
         options: ["A) SAR filing within 72 hours", "B) Annual re-screening of Tier-1 clients", "C) PEP screening of second-degree relatives", "D) EDD for cash transactions over $10,000"],
         answer: "C",
-        explanation: "'PEP screening of second-degree relatives' is correct because the memo explicitly lists this as a new expansion — the previous scope did not include second-degree relatives and close associates. 'SAR filing within 72 hours' is wrong because 72 hours was the old requirement; the new requirement is 48 hours. 'Annual re-screening of Tier-1 clients' is wrong because annual re-screening was the previous practice; the new requirement is semi-annual. 'EDD for cash transactions over $10,000' is wrong because $10,000 was the old EDD threshold; the new threshold is reduced to $8,000."
+        explanation: "「對政治公眾人物（PEP）的二等親進行篩查」是正確答案，因為備忘錄明確將此列為新增的擴展範圍，先前的範圍並不包含二等親及密切關聯人士。「在 72 小時內申報可疑活動報告」是錯誤的，因為 72 小時是舊的要求，新要求已縮短為 48 小時。「每年對第一層客戶重新篩查」是錯誤的，因為每年篩查是過去的做法，新要求已改為每半年一次。「對超過 $10,000 的現金交易進行強化盡職調查」是錯誤的，因為 $10,000 是舊的強化盡職調查門檻，新門檻已降低至 $8,000。"
       },
       {
         id: "p7b_hard_1_q3",
         text: "What must regional compliance officers do within 14 days?",
         options: ["A) Complete the AML training course", "B) File all outstanding SARs", "C) Confirm implementation to Global Compliance Division", "D) Re-screen all clients"],
         answer: "C",
-        explanation: "'Confirm implementation to Global Compliance Division' is correct because the memo states 'Regional compliance officers must submit implementation confirmation to the Global Compliance Division within 14 calendar days of this notice.' 'Complete the AML training course' is wrong because no training completion deadline is mentioned; the 14-day deadline is for implementation confirmation. 'File all outstanding SARs' is wrong because SAR filing requirements relate to detection timing, not to this 14-day implementation confirmation window. 'Re-screen all clients' is wrong because while re-screening frequency is changed, re-screening all clients within 14 days is not the stated requirement."
+        explanation: "「向全球合規部門確認已完成執行」是正確答案，因為備忘錄說明「各地區合規主任必須在本通知發出後 14 個自然日內向全球合規部門提交執行確認」。「完成 AML 培訓課程」是錯誤的，因為備忘錄中未提及任何培訓完成截止日期，14 天期限是針對執行確認的。「提交所有未申報的可疑活動報告」是錯誤的，因為可疑活動報告的申報要求與偵測時限有關，並非這個 14 天的執行確認窗口。「重新篩查所有客戶」是錯誤的，因為雖然重新篩查的頻率有所改變，但在 14 天內重新篩查所有客戶並非備忘錄的要求。"
       },
       {
         id: "p7b_hard_1_q4",
         text: "What is implied about the consequence of non-compliance?",
         options: ["A) Staff will be dismissed", "B) The firm may face regulatory sanctions and reputational damage", "C) The firm's license will automatically be revoked", "D) Clients will be notified of the failure"],
         answer: "B",
-        explanation: "'The firm may face regulatory sanctions and reputational damage' is correct because the memo states 'Failure to comply may expose the firm to regulatory sanctions and reputational risk.' 'Staff will be dismissed' is wrong because the memo addresses consequences for the firm, not individual employee termination. 'The firm's license will automatically be revoked' is wrong because the memo uses cautious language ('may expose') rather than describing an automatic license revocation. 'Clients will be notified of the failure' is wrong because no client notification of non-compliance is mentioned in the memo."
+        explanation: "「公司可能面臨法規制裁和聲譽損害」是正確答案，因為備忘錄說明「未能遵守可能使公司面臨法規制裁和聲譽風險」。「員工將被解雇」是錯誤的，因為備忘錄所述的後果是針對公司整體，而非個別員工的解雇。「公司執照將自動被撤銷」是錯誤的，因為備忘錄使用的是審慎措辭（「可能使……面臨」），而非描述執照自動被撤銷的確定性後果。「客戶將被通知違規情況」是錯誤的，因為備忘錄中完全未提及需要通知客戶任何不合規的情況。"
       }
     ]
   },
@@ -555,28 +555,28 @@ Recommendation: A purchase price adjustment mechanism (earnout) tied to CB-107's
         text: "What risk does the GenPath litigation present to the acquisition?",
         options: ["A) It could invalidate all of Crestline's patents", "B) There is a moderate probability that Crestline may owe $22 million in damages", "C) It will definitely result in a settlement before closing", "D) It prevents the acquisition from proceeding under antitrust law"],
         answer: "B",
-        explanation: "'There is a moderate probability that Crestline may owe $22 million in damages' is correct because the legal memo states 'Damages sought amount to $22 million' and 'the claim has a moderate probability of success for the plaintiff.' 'It could invalidate all of Crestline's patents' is wrong because the litigation is described as a patent infringement suit against Crestline, not a challenge that would void its entire IP portfolio. 'It will definitely result in a settlement before closing' is wrong because the memo notes the trial is scheduled for Q2 of next year and expresses probability, not certainty of settlement. 'It prevents the acquisition from proceeding under antitrust law' is wrong because the memo discusses insurance and indemnification as responses to the risk, not an antitrust bar on the deal."
+        explanation: "「Crestline 有中等可能性需支付 2,200 萬美元的損害賠償」是正確答案，因為法律備忘錄說明「求償金額為 2,200 萬美元」，且「該索賠對原告而言具有中等可能的勝訴機率」。「可能使 Crestline 所有專利無效」是錯誤的，因為訴訟被描述為針對 Crestline 的專利侵權訴訟，而非足以使其整個智慧財產權組合無效的挑戰。「將在交割前確定達成和解」是錯誤的，因為備忘錄指出審判預定於明年第二季進行，且以可能性而非確定性來表達和解的結果。「因反壟斷法而阻止收購進行」是錯誤的，因為備忘錄討論的是以保險和賠償條款來應對風險，而非反壟斷法對交易的阻礙。"
       },
       {
         id: "p7b_hard_2_q2",
         text: "What concern exists about CB-212?",
         options: ["A) It has not entered clinical trials yet", "B) Its Phase I data showed a liver toxicity signal", "C) It has been rejected by the FDA", "D) It directly competes with an existing product of the acquirer"],
         answer: "B",
-        explanation: "'Its Phase I data showed a liver toxicity signal' is correct because the legal memo states 'CB-212's Phase I data revealed a hepatotoxicity signal that required a protocol amendment,' and hepatotoxicity means liver toxicity. 'It has not entered clinical trials yet' is wrong because the memo states CB-212 is currently in Phase II clinical trials. 'It has been rejected by the FDA' is wrong because the memo describes an ongoing trial with a protocol amendment, not an FDA rejection. 'It directly competes with an existing product of the acquirer' is wrong because no competing product relationship between CB-212 and the acquirer is mentioned in either document."
+        explanation: "「其第一期臨床試驗數據出現肝毒性信號」是正確答案，因為法律備忘錄說明「CB-212 的第一期數據揭示了肝毒性信號，需要修改試驗方案」，肝毒性即指肝臟毒性。「尚未進入臨床試驗」是錯誤的，因為備忘錄說明 CB-212 目前正處於第二期臨床試驗階段。「已被 FDA 拒絕」是錯誤的，因為備忘錄描述的是一項在修正方案後持續進行的試驗，而非 FDA 的拒絕。「與收購方現有產品直接競爭」是錯誤的，因為兩份文件中均未提及 CB-212 與收購方之間存在任何競爭產品關係。"
       },
       {
         id: "p7b_hard_2_q3",
         text: "Why is the convertible note a concern according to the financial summary?",
         options: ["A) Its interest rate is above market", "B) It matures before the estimated cash runway ends", "C) It was issued without shareholder approval", "D) It has already been called by the lender"],
         answer: "B",
-        explanation: "'It matures before the estimated cash runway ends' is correct because the financial summary states 'The convertible note becomes due before the end of the estimated cash runway, creating a potential liquidity event.' 'Its interest rate is above market' is wrong because the interest rate on the convertible note is not discussed in the financial summary. 'It was issued without shareholder approval' is wrong because no information about the note's issuance process or shareholder approval is provided. 'It has already been called by the lender' is wrong because the note is described as due in 14 months, not already called or in default."
+        explanation: "「其到期日早於預估現金可用期結束之前」是正確答案，因為財務摘要說明「可轉換票據的到期日在預估現金可用期結束之前，可能引發流動性事件」。「其利率高於市場水準」是錯誤的，因為財務摘要中完全未討論可轉換票據的利率。「未經股東批准即已發行」是錯誤的，因為文件中未提供任何關於票據發行程序或股東批准的資訊。「已被貸款方提前要求還款」是錯誤的，因為票據被描述為 14 個月後到期，並非已被要求提前還款或已違約。"
       },
       {
         id: "p7b_hard_2_q4",
         text: "What deal structure do both documents support?",
         options: ["A) A full cash acquisition at a fixed price", "B) A stock-for-stock merger", "C) Performance-based earnout provisions tied to regulatory milestones", "D) A leveraged buyout using Crestline's assets"],
         answer: "C",
-        explanation: "'Performance-based earnout provisions tied to regulatory milestones' is correct because the legal memo recommends indemnification provisions tailored to GenPath litigation risk, and the financial summary recommends 'a purchase price adjustment mechanism (earnout) tied to CB-107's regulatory milestones' — both favor contingent pricing structures. 'A full cash acquisition at a fixed price' is wrong because both documents suggest variable or contingent pricing elements, not a fixed all-cash deal. 'A stock-for-stock merger' is wrong because neither document mentions equity as the transaction currency. 'A leveraged buyout using Crestline's assets' is wrong because the documents discuss drug milestone-based earnouts and litigation protection, not an asset-backed leveraged acquisition."
+        explanation: "「與法規里程碑掛鉤的績效型遞延對價條款」是正確答案，因為法律備忘錄建議針對 GenPath 訴訟風險量身訂製賠償條款，而財務摘要建議採用「與 CB-107 法規里程碑掛鉤的價格調整機制（遞延對價）」，兩份文件均支持條件式定價結構。「以固定價格進行全現金收購」是錯誤的，因為兩份文件均建議採用浮動或條件式的定價要素，而非固定的全現金交易。「股換股合併」是錯誤的，因為兩份文件均未提及以股權作為交易貨幣。「以 Crestline 資產為基礎的槓桿收購」是錯誤的，因為文件討論的是藥物里程碑遞延對價和訴訟保護機制，而非以資產為擔保的槓桿收購。"
       }
     ]
   },
@@ -646,35 +646,35 @@ Recommended allocation: $5 million (approximately 3% of fixed income portfolio).
         text: "What portion of the bond proceeds is allocated to Metro Line 6 expansion?",
         options: ["A) 25%", "B) 35%", "C) 40%", "D) 50%"],
         answer: "C",
-        explanation: "'40%' is correct because the prospectus explicitly states 'Expansion of Metro Line 6 (40%)' in the use of proceeds breakdown. '25%' is wrong because 25% is the allocation for Station Renovation, not Metro Line 6. '35%' is wrong because 35% is the allocation for the Fleet Electrification Program. '50%' is wrong because no 50% allocation appears in the use of proceeds; the three stated allocations are 40%, 35%, and 25%."
+        explanation: "「40%」是正確答案，因為說明書在資金用途分項中明確說明「捷運六號線擴建（40%）」。「25%」是錯誤的，因為 25% 是車站翻新的分配比例，並非捷運六號線的份額。「35%」是錯誤的，因為 35% 是車隊電氣化計畫的分配比例。「50%」是錯誤的，因為資金用途中並無 50% 的分配，三項分配分別為 40%、35% 和 25%。"
       },
       {
         id: "p7b_hard_3_q2",
         text: "According to the analyst report, what is a key advantage for high-bracket taxpayers?",
         options: ["A) The bonds are backed by federal guarantees", "B) The coupon rate is above market average", "C) The tax-exempt coupon provides a yield advantage", "D) The bond has a short duration"],
         answer: "C",
-        explanation: "'The tax-exempt coupon provides a yield advantage' is correct because the analyst report states 'Tax-exempt coupon provides significant yield advantage for investors in the 32%+ tax bracket.' 'The bonds are backed by federal guarantees' is wrong because the prospectus describes a tax levy and fare revenue base as backing, not federal guarantees. 'The coupon rate is above market average' is wrong because the advantage for high-bracket investors comes from the tax exemption, not the coupon rate being above market. 'The bond has a short duration' is wrong because the bond has a 10-year maturity, which the analyst notes implies meaningful interest rate sensitivity."
+        explanation: "「免稅票息提供殖利率優勢」是正確答案，因為分析師報告說明「免稅票息對所得稅級距 32% 以上的投資人提供顯著的殖利率優勢」。「債券有聯邦政府擔保」是錯誤的，因為說明書描述的擔保來源是稅收徵收機制和票價收入基礎，而非聯邦政府擔保。「票息率高於市場平均水準」是錯誤的，因為高稅率級距投資人的優勢來自免稅優惠，而非票息率高於市場水準。「債券存續期間較短」是錯誤的，因為這是一檔 10 年期債券，分析師也指出這意味著相當程度的利率敏感性。"
       },
       {
         id: "p7b_hard_3_q3",
         text: "What is the approximate tax-equivalent yield calculated by the portfolio manager?",
         options: ["A) 4.75%", "B) 5.5%", "C) 6.2%", "D) 7.2%"],
         answer: "D",
-        explanation: "'7.2%' is correct because the investor letter states 'the tax-exempt 4.75% coupon is equivalent to a taxable yield of approximately 7.2%' given the Foundation's 34% tax rate. '4.75%' is wrong because that is the stated coupon rate, not the tax-equivalent yield after accounting for the tax exemption benefit. '5.5%' is wrong because that is the lower end of comparable taxable corporate bond yields used as a benchmark, not the tax-equivalent yield calculation. '6.2%' is wrong because that is the upper end of the taxable corporate bond benchmark yield range, not the tax-equivalent yield of the PMTA bond."
+        explanation: "「7.2%」是正確答案，因為投資人信函說明鑑於基金會 34% 的稅率，「免稅的 4.75% 票息相當於約 7.2% 的應稅殖利率」。「4.75%」是錯誤的，因為那是債券的名目票息率，而非考量免稅優惠後的稅後等值殖利率。「5.5%」是錯誤的，因為那是用作基準比較的可課稅公司債殖利率區間的下限，而非此次計算的稅後等值殖利率。「6.2%」是錯誤的，因為那是可課稅公司債基準殖利率區間的上限，而非 PMTA 債券的稅後等值殖利率。"
       },
       {
         id: "p7b_hard_3_q4",
         text: "What safeguard does the portfolio manager propose to address construction risk?",
         options: ["A) A lower allocation to reduce exposure", "B) A covenant requiring semi-annual project progress reports", "C) Selling the bond after two years", "D) Purchasing credit default swaps"],
         answer: "B",
-        explanation: "'A covenant requiring semi-annual project progress reports' is correct because the investor letter states 'I recommend we include a covenant in our commitment letter requiring semi-annual project progress reports.' 'A lower allocation to reduce exposure' is wrong because the portfolio manager recommends proceeding with the full $5 million allocation, not reducing it. 'Selling the bond after two years' is wrong because the letter frames the 10-year maturity as aligned with the Foundation's investment horizon and does not suggest an early exit. 'Purchasing credit default swaps' is wrong because no hedging instrument is mentioned; the proposed safeguard is an informational covenant, not a financial hedge."
+        explanation: "「要求每半年提交一次專案進度報告的契約條款」是正確答案，因為投資人信函說明「我建議在我們的承諾書中加入要求每半年提交專案進度報告的契約條款」。「降低投資金額以減少風險敞口」是錯誤的，因為投資組合經理建議以全額 500 萬美元投入，並未建議縮減金額。「兩年後出售債券」是錯誤的，因為信函將 10 年期的到期日定位為符合基金會的投資期限，並未建議提前退出。「購買信用違約交換（CDS）」是錯誤的，因為信函中未提及任何避險工具，所提出的保障措施是資訊性的契約條款，而非金融對沖工具。"
       },
       {
         id: "p7b_hard_3_q5",
         text: "Which risk is mentioned in BOTH the prospectus and the analyst report?",
         options: ["A) Remote work trends reducing ridership", "B) Tax policy changes", "C) Construction delays and cost overruns", "D) Decline in the credit rating"],
         answer: "C",
-        explanation: "'Construction delays and cost overruns' is correct because the prospectus lists 'construction delays that may affect scheduled completion milestones' and the analyst report notes 'construction cost inflation has increased project estimates by approximately 8%' — both documents identify construction-related risk. 'Remote work trends reducing ridership' is wrong because this risk appears only in the analyst report ('Remote work trends may suppress long-term ridership recovery') and is not mentioned in the prospectus. 'Tax policy changes' is wrong because the prospectus mentions changes in transportation funding policy, not tax policy, and the analyst report does not raise tax policy as a risk. 'Decline in the credit rating' is wrong because no credit rating downgrade risk is mentioned in either the prospectus or the analyst report."
+        explanation: "「工程延誤和成本超支」是正確答案，因為說明書列出「可能影響預定完工里程碑的工程延誤」，而分析師報告指出「工程成本通膨使專案估算增加了約 8%」，兩份文件均識別了與工程相關的風險。「遠端工作趨勢降低乘客人數」是錯誤的，因為這項風險只出現在分析師報告中（「遠端工作趨勢可能抑制長期客運量的復甦」），說明書中並未提及。「稅務政策變化」是錯誤的，因為說明書提到的是交通運輸資金政策的變化，而非稅務政策，且分析師報告也未將稅務政策列為風險。「信用評等下降」是錯誤的，因為說明書和分析師報告中均未提及信用評等遭下調的風險。"
       }
     ]
   },
@@ -732,35 +732,35 @@ A: Yuki Tanaka, currently President of Digital Services, will lead the new Nexon
         text: "What EBITDA multiple was used to value the Consumer Products Division?",
         options: ["A) 7.5x", "B) 8.0x", "C) 9.2x", "D) 10.0x"],
         answer: "C",
-        explanation: "'9.2x' is correct because the board announcement states the sale of the Consumer Products Division to Orion Capital Partners represents 'a 9.2x EBITDA multiple.' '7.5x' is wrong because no 7.5x multiple is mentioned in any of the three documents. '8.0x' is wrong because no 8.0x multiple appears in the announcement or any other text. '10.0x' is wrong because the stated valuation multiple is 9.2x, not 10.0x."
+        explanation: "「9.2 倍」是正確答案，因為董事會公告說明將消費品部門出售給 Orion Capital Partners 的交易「代表 9.2 倍的 EBITDA 倍數」。「7.5 倍」是錯誤的，因為三份文件中均未提及 7.5 倍的估值倍數。「8.0 倍」是錯誤的，因為公告或任何其他文件中均未出現 8.0 倍的估值倍數。「10.0 倍」是錯誤的，因為所述的估值倍數是 9.2 倍，而非 10.0 倍。"
       },
       {
         id: "p7b_hard_4_q2",
         text: "According to the Q&A, which employees are affected by the workforce reduction?",
         options: ["A) Consumer Products Division employees", "B) Employees at Orion Capital Partners", "C) Technology Solutions and Digital Services employees", "D) All Nexon employees globally"],
         answer: "C",
-        explanation: "'Technology Solutions and Digital Services employees' is correct because the Q&A explicitly states 'The workforce reduction applies only to the Technology Solutions and Digital Services units.' 'Consumer Products Division employees' is wrong because the Q&A confirms that Consumer Products employees are not affected — they transfer to Orion Capital Partners. 'Employees at Orion Capital Partners' is wrong because Orion's own employees are not part of Nexon's restructuring; Orion also states no planned headcount changes. 'All Nexon employees globally' is wrong because only specific units are affected, not the entire global workforce."
+        explanation: "「技術解決方案及數位服務部門的員工」是正確答案，因為問答文件明確說明「裁員僅適用於技術解決方案及數位服務部門」。「消費品部門員工」是錯誤的，因為問答文件確認消費品員工不受影響，他們將隨交易轉移至 Orion Capital Partners。「Orion Capital Partners 的員工」是錯誤的，因為 Orion 自身的員工並不屬於 Nexon 重組的範圍，而且 Orion 也表明近期內不計劃進行人員調整。「全球所有 Nexon 員工」是錯誤的，因為只有特定部門受到影響，而非整個全球員工隊伍。"
       },
       {
         id: "p7b_hard_4_q3",
         text: "What is Orion Capital Partners' plan for the Consumer Products Division's current staff?",
         options: ["A) Lay off 8% of the workforce", "B) Integrate them into existing Orion teams", "C) No planned changes to headcount in the near term", "D) Transfer them to Nexon Digital"],
         answer: "C",
-        explanation: "'No planned changes to headcount in the near term' is correct because Orion's press statement says they intend to operate the division 'with no planned changes to headcount or operational structure in the near term.' 'Lay off 8% of the workforce' is wrong because the 8% workforce reduction applies to the Nexon Technology Solutions and Digital Services consolidation, not to Orion's plans for Consumer Products. 'Integrate them into existing Orion teams' is wrong because the press statement says the division will operate as a standalone entity under existing management. 'Transfer them to Nexon Digital' is wrong because Consumer Products employees are going to Orion, while Nexon Digital is the merged entity of Technology Solutions and Digital Services."
+        explanation: "「近期內不計劃進行人員調整」是正確答案，因為 Orion 的新聞稿說明他們打算以「近期內不對人員或營運架構進行計劃性調整」的方式來經營該部門。「裁減 8% 的員工」是錯誤的，因為 8% 的裁員計畫適用於 Nexon 技術解決方案與數位服務部門的整合，而非 Orion 對消費品部門的規劃。「將他們整合進 Orion 現有團隊」是錯誤的，因為新聞稿說明該部門將以獨立實體的形式在現有管理層下運作。「將他們轉移至 Nexon Digital」是錯誤的，因為消費品員工將歸屬 Orion，而 Nexon Digital 是技術解決方案與數位服務合併後的實體。"
       },
       {
         id: "p7b_hard_4_q4",
         text: "What is the maximum severance an affected employee could receive?",
         options: ["A) 4 weeks", "B) 13 weeks", "C) 20 weeks", "D) 26 weeks"],
         answer: "D",
-        explanation: "'26 weeks' is correct because the Q&A states severance is 'two weeks per year of service, with a minimum of four weeks and a maximum of 26 weeks.' '4 weeks' is wrong because four weeks is the minimum severance, not the maximum. '13 weeks' is wrong because no 13-week cap is mentioned in the Q&A severance formula. '20 weeks' is wrong because the stated maximum is 26 weeks, not 20."
+        explanation: "「26 週」是正確答案，因為問答文件說明資遣費為「每服務年資兩週，最少四週，最多 26 週」。「4 週」是錯誤的，因為四週是最低資遣費，而非最高上限。「13 週」是錯誤的，因為問答文件的資遣費計算公式中完全未提及 13 週的上限。「20 週」是錯誤的，因為所述的最高上限是 26 週，而非 20 週。"
       },
       {
         id: "p7b_hard_4_q5",
         text: "What can be inferred about the EBITDA margin of the Consumer Products Division?",
         options: ["A) Approximately 10%", "B) Approximately 14%", "C) Approximately 20%", "D) Approximately 25%"],
         answer: "B",
-        explanation: "'Approximately 14%' is correct because Orion's press statement provides revenue of approximately $210 million and EBITDA of approximately $30 million, and dividing $30M by $210M gives an EBITDA margin of approximately 14.3%. 'Approximately 10%' is wrong because $30M divided by $210M equals roughly 14%, not 10%. 'Approximately 20%' is wrong because a 20% margin would require EBITDA of $42M on $210M revenue, which does not match the stated figures. 'Approximately 25%' is wrong because a 25% margin would require EBITDA of $52.5M on $210M revenue, far above the stated $30M."
+        explanation: "「約 14%」是正確答案，因為 Orion 的新聞稿提供的數據為收入約 2.1 億美元，EBITDA 約 3,000 萬美元，以 3,000 萬除以 2.1 億，EBITDA 利潤率約為 14.3%。「約 10%」是錯誤的，因為 3,000 萬除以 2.1 億約等於 14%，而非 10%。「約 20%」是錯誤的，因為 20% 的利潤率需要在 2.1 億的收入下實現 4,200 萬的 EBITDA，與所述數字不符。「約 25%」是錯誤的，因為 25% 的利潤率需要在 2.1 億的收入下實現 5,250 萬的 EBITDA，遠超過所述的 3,000 萬美元。"
       }
     ]
   }
