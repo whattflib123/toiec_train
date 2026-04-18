@@ -1,8 +1,7 @@
 // ── Auth ───────────────────────────────────────────────────────────────────
-// 修改這裡的帳號密碼
 const USERS = {
-  'user1': 'pass1',
-  'user2': 'pass2'
+  'pyc':   'pyc0321',
+  'felix': 'felix'
 };
 
 function getCurrentUser() {
