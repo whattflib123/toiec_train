@@ -965,6 +965,23 @@ function finishQuiz() {
   window.scrollTo(0, 0);
 }
 
+// ── Version Check ──────────────────────────────────────────────────────────
+function checkVersion() {
+  fetch('version.json?t=' + Date.now())
+    .then(r => r.json())
+    .then(({ v }) => {
+      const stored = localStorage.getItem('toeic_app_version');
+      if (stored && stored !== v) {
+        const banner = document.createElement('div');
+        banner.className = 'update-banner';
+        banner.innerHTML = `🆕 網站有新版本，建議更新以取得最新題目與功能。<button onclick="localStorage.setItem('toeic_app_version','${v}');location.reload(true)">立即更新</button>`;
+        document.body.prepend(banner);
+      }
+      localStorage.setItem('toeic_app_version', v);
+    })
+    .catch(() => {});
+}
+
 // ── Boot ───────────────────────────────────────────────────────────────────
 const bootUser = getCurrentUser();
 if (bootUser) {
@@ -974,3 +991,4 @@ if (bootUser) {
   state.view = 'home';
 }
 render();
+checkVersion();

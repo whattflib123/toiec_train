@@ -203,6 +203,35 @@ pre { white-space: pre-wrap; word-wrap: break-word; font-family: inherit; }
 .info-card span { font-size: 12px; color: var(--text-muted); }
 .info-card span:nth-child(2) { font-weight: 600; color: var(--text); font-size: 13px; }
 
+/* ── Update Banner ───────────────────────────────────────────────────── */
+.update-banner {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: var(--navy);
+  color: white;
+  text-align: center;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.update-banner button {
+  background: var(--gold);
+  color: var(--navy);
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+.update-banner button:hover { background: var(--gold-light); }
+
 /* ── Resume Banner ───────────────────────────────────────────────────── */
 .resume-banner {
   display: flex;
