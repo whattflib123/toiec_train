@@ -107,6 +107,25 @@ function buildAllQuestions() {
 }
 function totalQ() { return buildAllQuestions().length; }
 
+// ── Explanation formatter ──────────────────────────────────────────────────
+function formatExplanation(explanation) {
+  const sentences = explanation.split('。').map(s => s.trim()).filter(s => s.length > 0);
+  if (sentences.length < 2) {
+    return `<div class="result-explain"><div class="explain-title">💡 解析</div><p>${explanation}</p></div>`;
+  }
+  const items = sentences.map(s => {
+    const isCorrect = s.includes('正確');
+    return `<li class="explain-item ${isCorrect ? 'ei-correct' : 'ei-wrong'}">
+      <span class="ei-icon">${isCorrect ? '✓' : '✗'}</span>
+      <span class="ei-text">${s}。</span>
+    </li>`;
+  }).join('');
+  return `<div class="result-explain">
+    <div class="explain-title">💡 解析</div>
+    <ul class="explain-list">${items}</ul>
+  </div>`;
+}
+
 // ── Passage HTML helper ────────────────────────────────────────────────────
 function passageHtml(q) {
   if (q.part==='part6' && q.passage) {
@@ -368,7 +387,7 @@ function renderPractice() {
     <div class="practice-result ${isCorrect?'result-correct':'result-wrong'}">
       <div class="result-badge">${isCorrect?'✓ 正確！':'✗ 答錯了'}</div>
       ${!isCorrect ? `<div class="result-correct-ans">正確答案：${q.options.find(o=>o.charAt(0)===q.answer)||q.answer}</div>` : ''}
-      <div class="result-explain">💡 ${q.explanation}</div>
+      ${formatExplanation(q.explanation)}
       <button class="btn-next-q" data-action="practice-next">
         ${isLast ? '完成練習 ✓' : '下一題 →'}
       </button>
@@ -492,7 +511,7 @@ function renderExamResults() {
           return `<div class="review-opt ${cls}">${l===ua?'▶ ':''}${opt}</div>`;
         }).join('')}
       </div>
-      <div class="review-explain">💡 ${q.explanation}</div>
+      ${formatExplanation(q.explanation)}
     </div>`;
   }).join('');
 
@@ -548,7 +567,7 @@ function renderWrongReview() {
             return `<div class="wrong-opt ${isCorr?'opt-correct':''}">${isCorr?'✓ ':''}${opt}</div>`;
           }).join('')}
         </div>
-        <div class="review-explain">💡 ${q.explanation}</div>
+        ${formatExplanation(q.explanation)}
       </div>
     </div>`;
   }).join('');
