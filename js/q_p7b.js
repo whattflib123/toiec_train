@@ -672,9 +672,9 @@ Recommended allocation: $5 million (approximately 3% of fixed income portfolio).
       {
         id: "p7b_hard_3_q5",
         text: "Which risk is mentioned in BOTH the prospectus and the analyst report?",
-        options: ["A) Rising interest rates", "B) Tax policy changes", "C) Construction delays and cost overruns", "D) Decline in the credit rating"],
+        options: ["A) Remote work trends reducing ridership", "B) Tax policy changes", "C) Construction delays and cost overruns", "D) Decline in the credit rating"],
         answer: "C",
-        explanation: "'Construction delays and cost overruns' is correct because the prospectus lists 'construction delays that may affect scheduled completion milestones' and the analyst report notes 'construction cost inflation has increased project estimates by approximately 8%.' 'Rising interest rates' is wrong because interest rate risk is mentioned in the prospectus and analyst report individually, but the analyst frames it as duration sensitivity, while both texts do not jointly highlight it as a shared named risk. 'Tax policy changes' is wrong because the prospectus mentions changes in transportation funding policy, not tax policy, while the analyst does not mention tax policy risk. 'Decline in the credit rating' is wrong because no credit rating downgrade risk is mentioned in either the prospectus or the analyst report."
+        explanation: "'Construction delays and cost overruns' is correct because the prospectus lists 'construction delays that may affect scheduled completion milestones' and the analyst report notes 'construction cost inflation has increased project estimates by approximately 8%' — both documents identify construction-related risk. 'Remote work trends reducing ridership' is wrong because this risk appears only in the analyst report ('Remote work trends may suppress long-term ridership recovery') and is not mentioned in the prospectus. 'Tax policy changes' is wrong because the prospectus mentions changes in transportation funding policy, not tax policy, and the analyst report does not raise tax policy as a risk. 'Decline in the credit rating' is wrong because no credit rating downgrade risk is mentioned in either the prospectus or the analyst report."
       }
     ]
   },
