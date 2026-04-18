@@ -29,8 +29,10 @@ function loadHistory() { const u=getCurrentUser(); return u?_g(`toeic_history_${
 function saveHistory() { const u=getCurrentUser(); if(u) _s(`toeic_history_${u}`,state.history); }
 function loadCorrect() { const u=getCurrentUser(); return u?new Set(_g(`toeic_correct_${u}`,[])):new Set(); }
 function saveCorrect() { const u=getCurrentUser(); if(u) _s(`toeic_correct_${u}`,[...state.correct]); }
-function loadWrong()   { const u=getCurrentUser(); return u?new Set(_g(`toeic_wrong_${u}`,[])):new Set(); }
-function saveWrong()   { const u=getCurrentUser(); if(u) _s(`toeic_wrong_${u}`,[...state.wrong]); }
+function loadWrong()      { const u=getCurrentUser(); return u?new Set(_g(`toeic_wrong_${u}`,[])):new Set(); }
+function saveWrong()      { const u=getCurrentUser(); if(u) _s(`toeic_wrong_${u}`,[...state.wrong]); }
+function loadFavorites()  { const u=getCurrentUser(); return u?new Set(_g(`toeic_fav_${u}`,[])):new Set(); }
+function saveFavorites()  { const u=getCurrentUser(); if(u) _s(`toeic_fav_${u}`,[...state.favorites]); }
 
 function loadPracticeSession() { const u=getCurrentUser(); return u?_g(`toeic_practice_${u}`,null):null; }
 function savePracticeSession() {
@@ -68,6 +70,7 @@ const state = {
   history: [],
   correct: new Set(),
   wrong: new Set(),
+  favorites: new Set(),
 };
 
 // ── Shuffle & Priority ─────────────────────────────────────────────────────
@@ -149,6 +152,7 @@ function render() {
     case 'exam':         app.innerHTML = renderExam();        break;
     case 'exam-results': app.innerHTML = renderExamResults(); break;
     case 'wrong-review': app.innerHTML = renderWrongReview(); break;
+    case 'favorites':    app.innerHTML = renderFavorites();   break;
     case 'progress':     app.innerHTML = renderProgress();    break;
   }
   attachEvents();
@@ -256,6 +260,15 @@ function renderHome() {
         <span class="action-body">
           <span class="action-title">我的錯題</span>
           <span class="action-desc">${wrongCnt} 題需要複習</span>
+        </span>
+        <span class="action-arrow">›</span>
+      </button>` : ''}
+      ${state.favorites.size > 0 ? `
+      <button class="btn-action btn-action-fav" data-action="goto-favorites">
+        <span class="action-icon">⭐</span>
+        <span class="action-body">
+          <span class="action-title">我的最愛</span>
+          <span class="action-desc">${state.favorites.size} 題已收藏</span>
         </span>
         <span class="action-arrow">›</span>
       </button>` : ''}
@@ -383,9 +396,15 @@ function renderPractice() {
     return `<button class="${cls}" ${attrs}>${opt}</button>`;
   }).join('');
 
+  const isFav = state.favorites.has(q.id);
   const resultHtml = state.showResult ? `
     <div class="practice-result ${isCorrect?'result-correct':'result-wrong'}">
-      <div class="result-badge">${isCorrect?'✓ 正確！':'✗ 答錯了'}</div>
+      <div class="result-top-row">
+        <div class="result-badge">${isCorrect?'✓ 正確！':'✗ 答錯了'}</div>
+        <button class="btn-star ${isFav?'star-on':''}" data-action="toggle-favorite" data-qid="${q.id}" title="${isFav?'取消收藏':'加入最愛'}">
+          ${isFav?'★':'☆'}
+        </button>
+      </div>
       ${!isCorrect ? `<div class="result-correct-ans">正確答案：${q.options.find(o=>o.charAt(0)===q.answer)||q.answer}</div>` : ''}
       ${formatExplanation(q.explanation)}
       <button class="btn-next-q" data-action="practice-next">
@@ -411,7 +430,10 @@ function renderPractice() {
     <div class="practice-body">
       ${passageHtml(q)}
       <div class="question-area">
-        <div class="q-number">Question ${state.currentIndex+1}</div>
+        <div class="q-number-row">
+          <div class="q-number">Question ${state.currentIndex+1}</div>
+          <button class="btn-copy" data-action="copy-question" data-qid="${q.id}" title="複製題目">📋 複製</button>
+        </div>
         <div class="q-text">${q.text||q.question}</div>
         <div class="options-list">${optionsHtml}</div>
       </div>
@@ -448,7 +470,10 @@ function renderExam() {
     <div class="quiz-body">
       ${passageHtml(q)}
       <div class="question-area">
-        <div class="q-number">Question ${state.currentIndex+1}</div>
+        <div class="q-number-row">
+          <div class="q-number">Question ${state.currentIndex+1}</div>
+          <button class="btn-copy" data-action="copy-question" data-qid="${q.id}" title="複製題目">📋 複製</button>
+        </div>
         <div class="q-text">${q.text||q.question}</div>
         <div class="options-list">
           ${q.options.map(opt => {
@@ -494,12 +519,15 @@ function renderExamResults() {
   const reviewHtml = state.questions.map((q,i) => {
     const ua = state.answers[q.id]||'未作答';
     const ok = ua===q.answer;
+    const fav = state.favorites.has(q.id);
     return `<div class="review-item ${ok?'correct':'wrong'}">
       <div class="review-header">
         <span class="review-num">Q${i+1}</span>
         <span class="part-tag" style="font-size:11px">${PART_LABELS[q.part]?.label}</span>
         <span class="diff-tag ${q.difficulty}" style="font-size:11px">${DIFFICULTY_LABELS[q.difficulty]?.label}</span>
         <span class="review-result">${ok?'✓ 正確':'✗ 錯誤'}</span>
+        <button class="btn-star ${fav?'star-on':''}" data-action="toggle-favorite" data-qid="${q.id}" style="margin-left:auto">${fav?'★':'☆'}</button>
+        <button class="btn-copy" data-action="copy-question" data-qid="${q.id}">📋</button>
       </div>
       <div class="review-question">${q.text||q.question}</div>
       <div class="review-answers">
@@ -581,6 +609,58 @@ function renderWrongReview() {
   </div>`;
 }
 
+// ── renderFavorites ────────────────────────────────────────────────────────
+function renderFavorites() {
+  const allQ = buildAllQuestions();
+  const favQs = [...state.favorites].map(id=>allQ.find(q=>q.id===id)).filter(Boolean);
+
+  if (!favQs.length) {
+    return `<div class="wrong-review-view">
+      <button class="btn-back" data-action="goto-home">← 返回首頁</button>
+      <div class="empty-state">⭐ 還沒有收藏任何題目</div>
+    </div>`;
+  }
+
+  const items = favQs.map((q,i) => {
+    const qText = q.text||q.question;
+    const preview = qText.length>60 ? qText.substring(0,60)+'…' : qText;
+    const psg = passageHtml(q);
+    return `<div class="wrong-item" style="border-left-color:var(--gold)">
+      <div class="wrong-item-head" data-action="toggle-fav-item" data-idx="${i}">
+        <div class="wrong-item-meta">
+          <span class="part-tag">${PART_LABELS[q.part]?.label}</span>
+          <span class="diff-tag ${q.difficulty}">${DIFFICULTY_LABELS[q.difficulty]?.label}</span>
+        </div>
+        <div class="wrong-item-preview">${preview}</div>
+        <span class="wrong-toggle" id="ftoggle-${i}">▼</span>
+      </div>
+      <div class="wrong-item-body" id="fbody-${i}" style="display:none">
+        ${psg ? `<div style="margin-bottom:12px">${psg}</div>` : ''}
+        <div class="wrong-full-q">${qText}</div>
+        <div class="wrong-options">
+          ${q.options.map(opt=>{
+            const isCorr = opt.charAt(0)===q.answer;
+            return `<div class="wrong-opt ${isCorr?'opt-correct':''}">${isCorr?'✓ ':''}${opt}</div>`;
+          }).join('')}
+        </div>
+        ${formatExplanation(q.explanation)}
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn-star star-on" data-action="toggle-favorite" data-qid="${q.id}">★ 取消收藏</button>
+          <button class="btn-copy" data-action="copy-question" data-qid="${q.id}">📋 複製題目</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="wrong-review-view">
+    <button class="btn-back" data-action="goto-home">← 返回首頁</button>
+    <h2>⭐ 我的最愛 (${favQs.length} 題)</h2>
+    <p class="wrong-hint">點擊題目展開查看解析</p>
+    <div class="wrong-list">${items}</div>
+  </div>`;
+}
+
 // ── renderProgress ─────────────────────────────────────────────────────────
 function renderProgress() {
   const histHtml = state.history.length===0
@@ -648,7 +728,7 @@ function submitLogin() {
   const u = document.getElementById('login-username')?.value.trim()||'';
   const p = document.getElementById('login-password')?.value||'';
   if (doLogin(u,p)) {
-    state.stats=loadStats(); state.history=loadHistory(); state.correct=loadCorrect(); state.wrong=loadWrong();
+    state.stats=loadStats(); state.history=loadHistory(); state.correct=loadCorrect(); state.wrong=loadWrong(); state.favorites=loadFavorites();
     state.view='home'; render();
   } else {
     const err=document.getElementById('login-error'); if(err) err.style.display='block';
@@ -665,6 +745,7 @@ function handleAction(e) {
     case 'goto-home': state.view='home'; render(); break;
     case 'goto-progress': state.view='progress'; render(); break;
     case 'goto-wrong-review': state.view='wrong-review'; render(); break;
+    case 'goto-favorites': state.view='favorites'; render(); break;
 
     case 'start-practice': startPractice(false); break;
     case 'resume-practice': startPractice(true); break;
@@ -728,6 +809,28 @@ function handleAction(e) {
       break;
     }
 
+    case 'copy-question': {
+      const q = buildAllQuestions().find(q=>q.id===qid);
+      if (!q) break;
+      const text = `${q.text||q.question}\n${q.options.join('\n')}`;
+      navigator.clipboard.writeText(text).then(() => {
+        el.textContent = '✓ 已複製';
+        setTimeout(() => { el.textContent = '📋 複製'; }, 1500);
+      }).catch(() => {
+        el.textContent = '✓ 已複製';
+        setTimeout(() => { el.textContent = '📋 複製'; }, 1500);
+      });
+      break;
+    }
+
+    case 'toggle-favorite': {
+      if (state.favorites.has(qid)) { state.favorites.delete(qid); }
+      else { state.favorites.add(qid); }
+      saveFavorites();
+      render();
+      break;
+    }
+
     case 'toggle-wrong': {
       const body = document.getElementById(`wbody-${idx}`);
       const tog  = document.getElementById(`wtoggle-${idx}`);
@@ -735,10 +838,17 @@ function handleAction(e) {
       break;
     }
 
+    case 'toggle-fav-item': {
+      const body = document.getElementById(`fbody-${idx}`);
+      const tog  = document.getElementById(`ftoggle-${idx}`);
+      if (body) { const open=body.style.display!=='none'; body.style.display=open?'none':'block'; if(tog) tog.textContent=open?'▼':'▲'; }
+      break;
+    }
+
     case 'clear-stats':
       if(confirm('確定清除所有記錄？此操作無法復原。')) {
-        state.stats={}; state.history=[]; state.correct=new Set(); state.wrong=new Set();
-        saveStats(); saveHistory(); saveCorrect(); saveWrong();
+        state.stats={}; state.history=[]; state.correct=new Set(); state.wrong=new Set(); state.favorites=new Set();
+        saveStats(); saveHistory(); saveCorrect(); saveWrong(); saveFavorites();
         clearPracticeSession(); clearExamSession();
         render();
       }
@@ -837,7 +947,7 @@ function checkVersion() {
 const bootUser = getCurrentUser();
 if (bootUser) {
   state.stats=loadStats(); state.history=loadHistory();
-  state.correct=loadCorrect(); state.wrong=loadWrong();
+  state.correct=loadCorrect(); state.wrong=loadWrong(); state.favorites=loadFavorites();
   state.view='home';
 }
 render();
