@@ -22,6 +22,7 @@ function doLogout() {
   state.view = 'login';
   state.stats = {};
   state.history = [];
+  state.correct = new Set();
   render();
 }
 
@@ -46,6 +47,31 @@ function saveHistory() {
   localStorage.setItem(`toeic_history_${u}`, JSON.stringify(state.history));
 }
 
+function loadCorrect() {
+  const u = getCurrentUser(); if (!u) return new Set();
+  try { return new Set(JSON.parse(localStorage.getItem(`toeic_correct_${u}`) || '[]')); } catch { return new Set(); }
+}
+
+function saveCorrect() {
+  const u = getCurrentUser(); if (!u) return;
+  localStorage.setItem(`toeic_correct_${u}`, JSON.stringify([...state.correct]));
+}
+
+// ── Shuffle ────────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function prioritize(questions) {
+  const unseen  = shuffle(questions.filter(q => !state.correct.has(q.id)));
+  const mastered = shuffle(questions.filter(q => state.correct.has(q.id)));
+  return [...unseen, ...mastered];
+}
+
 // ── State ──────────────────────────────────────────────────────────────────
 const state = {
   view: 'login',
@@ -61,7 +87,8 @@ const state = {
   mode: 'practice',
   reviewPassageId: null,
   stats: {},
-  history: []
+  history: [],
+  correct: new Set()
 };
 
 // ── Question Builder ───────────────────────────────────────────────────────
@@ -501,6 +528,11 @@ function renderProgress() {
   <div class="progress-view">
     <button class="btn-back" data-action="goto-home">← 返回首頁</button>
     <h2>📊 ${getCurrentUser()} 的學習進度</h2>
+    <div class="mastery-bar">
+      <span class="mastery-label">已掌握題數</span>
+      <span class="mastery-count">${state.correct.size} 題</span>
+      <span class="mastery-note">（答對即記錄，答錯即移除）</span>
+    </div>
 
     <div class="progress-section">
       <h3 class="section-title">📅 練習歷史紀錄</h3>
@@ -586,6 +618,7 @@ function submitLogin() {
   if (doLogin(username, password)) {
     state.stats = loadStats();
     state.history = loadHistory();
+    state.correct = loadCorrect();
     state.view = 'home';
     render();
   } else {
@@ -675,8 +708,10 @@ function handleAction(e) {
       if (confirm('確定要清除所有練習記錄嗎？')) {
         state.stats = {};
         state.history = [];
+        state.correct = new Set();
         saveStats();
         saveHistory();
+        saveCorrect();
         render();
       }
       break;
@@ -686,7 +721,7 @@ function handleAction(e) {
 function startQuiz() {
   const part = state.selectedPart;
   const diff = state.selectedDifficulty;
-  state.questions = buildQuestions(part, diff);
+  state.questions = prioritize(buildQuestions(part, diff));
   state.currentIndex = 0;
   state.answers = {};
   state.startTime = Date.now();
@@ -727,6 +762,13 @@ function finishQuiz() {
   if (state.history.length > 200) state.history.pop();
   saveHistory();
 
+  // 更新已掌握題目：答對加入、答錯移除
+  state.questions.forEach(q => {
+    if (state.answers[q.id] === q.answer) state.correct.add(q.id);
+    else state.correct.delete(q.id);
+  });
+  saveCorrect();
+
   state.view = 'results';
   render();
   window.scrollTo(0, 0);
@@ -737,6 +779,7 @@ const bootUser = getCurrentUser();
 if (bootUser) {
   state.stats = loadStats();
   state.history = loadHistory();
+  state.correct = loadCorrect();
   state.view = 'home';
 }
 render();

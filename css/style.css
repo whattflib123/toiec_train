@@ -647,6 +647,21 @@ pre { white-space: pre-wrap; word-wrap: break-word; font-family: inherit; }
 .btn-logout:hover { color: var(--red); border-color: var(--red); }
 
 /* ── History List ────────────────────────────────────────────────────── */
+.mastery-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--green);
+}
+.mastery-label { font-size: 14px; font-weight: 700; color: var(--navy); }
+.mastery-count { font-size: 20px; font-weight: 900; color: var(--green); }
+.mastery-note { font-size: 12px; color: var(--text-muted); }
+
 .progress-section { margin-bottom: 24px; }
 .section-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 12px; }
 
