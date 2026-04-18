@@ -52,6 +52,17 @@ function loadCorrect() {
   try { return new Set(JSON.parse(localStorage.getItem(`toeic_correct_${u}`) || '[]')); } catch { return new Set(); }
 }
 
+function getAnyUserSnapshot(username) {
+  try {
+    const stats   = JSON.parse(localStorage.getItem(`toeic_stats_${username}`)   || '{}');
+    const history = JSON.parse(localStorage.getItem(`toeic_history_${username}`) || '[]');
+    const correct = JSON.parse(localStorage.getItem(`toeic_correct_${username}`) || '[]');
+    const attempts = Object.values(stats).reduce((s, v) => s + (v.attempts || 0), 0);
+    const bestOverall = Object.values(stats).reduce((m, v) => Math.max(m, v.best || 0), 0);
+    return { stats, history, masteredCount: correct.length, attempts, bestOverall };
+  } catch { return { stats: {}, history: [], masteredCount: 0, attempts: 0, bestOverall: 0 }; }
+}
+
 function saveCorrect() {
   const u = getCurrentUser(); if (!u) return;
   localStorage.setItem(`toeic_correct_${u}`, JSON.stringify([...state.correct]));
@@ -503,6 +514,76 @@ function renderResults() {
   </div>`;
 }
 
+function renderVersus() {
+  const me = getCurrentUser();
+  const others = Object.keys(USERS).filter(u => u !== me);
+  if (others.length === 0) return '';
+
+  const mySnap = { masteredCount: state.correct.size, attempts: Object.values(state.stats).reduce((s,v)=>s+(v.attempts||0),0), bestOverall: Object.values(state.stats).reduce((m,v)=>Math.max(m,v.best||0),0), history: state.history, stats: state.stats };
+
+  return `
+  <div class="progress-section">
+    <h3 class="section-title">⚔️ 對手比較</h3>
+    ${others.map(rival => {
+      const rv = getAnyUserSnapshot(rival);
+      const parts = ['part5','part6','part7'];
+      const diffs = ['easy','medium','hard'];
+      const allKeys = parts.flatMap(p => diffs.map(d => `${p}_${d}`));
+
+      const myWins   = allKeys.filter(k => (mySnap.stats[k]?.best||0) > (rv.stats[k]?.best||0)).length;
+      const rivalWins= allKeys.filter(k => (rv.stats[k]?.best||0) > (mySnap.stats[k]?.best||0)).length;
+
+      const rivalRecent = rv.history.slice(0,3);
+      const myRecent    = mySnap.history.slice(0,3);
+
+      const statRow = (label, myVal, rvVal, higherIsBetter=true) => {
+        const myWin = higherIsBetter ? myVal > rvVal : myVal < rvVal;
+        const rvWin = higherIsBetter ? rvVal > myVal : rvVal < myVal;
+        return `<div class="versus-row">
+          <span class="vs-val ${myWin?'vs-win':rvWin?'vs-lose':''}">${myVal}</span>
+          <span class="vs-label">${label}</span>
+          <span class="vs-val ${rvWin?'vs-win':myWin?'vs-lose':''}">${rvVal}</span>
+        </div>`;
+      };
+
+      return `<div class="versus-card">
+        <div class="versus-header">
+          <div class="versus-player ${myWins>=rivalWins?'vs-leading':''}">
+            <div class="vs-name">👤 ${me}</div>
+            <div class="vs-tag">${myWins > rivalWins ? '領先中' : myWins === rivalWins ? '平手' : '落後中'}</div>
+          </div>
+          <div class="versus-vs">VS</div>
+          <div class="versus-player ${rivalWins>myWins?'vs-leading':''}">
+            <div class="vs-name">👤 ${rival}</div>
+            <div class="vs-tag">${rivalWins > myWins ? '領先中' : rivalWins === myWins ? '平手' : '落後中'}</div>
+          </div>
+        </div>
+        <div class="versus-stats">
+          ${statRow('已掌握題數', mySnap.masteredCount, rv.masteredCount)}
+          ${statRow('練習總次數', mySnap.attempts, rv.attempts)}
+          ${statRow('最高單次分數', mySnap.bestOverall + '%', rv.bestOverall + '%')}
+          ${statRow('各題型勝場', myWins, rivalWins)}
+        </div>
+        <div class="versus-recent">
+          <div class="vs-recent-col">
+            ${myRecent.length ? myRecent.map(h=>`<div class="vs-recent-item">
+              <span>${h.part==='all'?'完整':PART_LABELS[h.part]?.label||h.part} · ${DIFFICULTY_LABELS[h.difficulty]?.label?.split(' ')[0]||''}</span>
+              <span style="color:${h.pct>=80?'var(--green)':h.pct>=60?'var(--orange)':'var(--red)'};font-weight:700">${h.pct}%</span>
+            </div>`).join('') : '<div class="vs-recent-item" style="color:var(--text-muted)">尚無記錄</div>'}
+          </div>
+          <div class="vs-recent-divider"></div>
+          <div class="vs-recent-col">
+            ${rivalRecent.length ? rivalRecent.map(h=>`<div class="vs-recent-item">
+              <span>${h.part==='all'?'完整':PART_LABELS[h.part]?.label||h.part} · ${DIFFICULTY_LABELS[h.difficulty]?.label?.split(' ')[0]||''}</span>
+              <span style="color:${h.pct>=80?'var(--green)':h.pct>=60?'var(--orange)':'var(--red)'};font-weight:700">${h.pct}%</span>
+            </div>`).join('') : '<div class="vs-recent-item" style="color:var(--text-muted)">尚無記錄</div>'}
+          </div>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
 function renderProgress() {
   const entries = Object.entries(state.stats);
 
@@ -533,6 +614,7 @@ function renderProgress() {
       <span class="mastery-count">${state.correct.size} 題</span>
       <span class="mastery-note">（答對即記錄，答錯即移除）</span>
     </div>
+    ${renderVersus()}
 
     <div class="progress-section">
       <h3 class="section-title">📅 練習歷史紀錄</h3>
