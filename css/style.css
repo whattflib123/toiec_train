@@ -1091,6 +1091,54 @@ button { touch-action: manipulation; min-height: 44px; }
 .btn-action-fav { border-color: var(--gold); }
 .btn-action-fav .action-title { color: #9a6800; }
 
+/* ── Note block ─────────────────────────────────────────────────────── */
+.note-block {
+  margin-top: 12px; background: #fffef0; border-radius: var(--radius-sm);
+  border: 1.5px solid #ffe082; padding: 12px;
+}
+.note-label { font-size: 12px; font-weight: 700; color: #9a6800; margin-bottom: 6px; }
+.note-textarea {
+  width: 100%; min-height: 80px; resize: vertical;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 8px 10px; font-family: inherit; font-size: 14px !important;
+  color: var(--text); background: #fff; line-height: 1.6; outline: none;
+  display: block;
+}
+.note-textarea:focus { border-color: var(--gold); }
+
+.item-actions {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);
+}
+.btn-delete-wrong {
+  background: #fee2e2; color: #991b1b;
+  border: 1.5px solid #fca5a5; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; padding: 6px 12px;
+  min-height: 36px; transition: all 0.15s; font-family: inherit;
+  margin-left: auto;
+}
+.btn-delete-wrong:active { background: #fecaca; }
+.note-dot { font-size: 12px; }
+
+/* ── Changelog ──────────────────────────────────────────────────────── */
+.changelog-section {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 18px 20px; margin-top: 16px;
+}
+.changelog-section h3 { font-size: 15px; margin-bottom: 12px; color: var(--navy); }
+.changelog-list { display: flex; flex-direction: column; }
+.changelog-item {
+  display: flex; gap: 10px; align-items: baseline;
+  font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--border);
+}
+.changelog-item:last-child { border-bottom: none; }
+.cl-version {
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+  background: var(--bg); padding: 2px 6px; border-radius: 4px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.cl-desc { color: var(--text); line-height: 1.5; }
+
 /* ── Dots more indicator ────────────────────────────────────────────── */
 .dots-more { font-size: 11px; color: var(--text-muted); align-self: center; }
 

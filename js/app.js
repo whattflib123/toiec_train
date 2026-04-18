@@ -33,6 +33,8 @@ function loadWrong()      { const u=getCurrentUser(); return u?new Set(_g(`toeic
 function saveWrong()      { const u=getCurrentUser(); if(u) _s(`toeic_wrong_${u}`,[...state.wrong]); }
 function loadFavorites()  { const u=getCurrentUser(); return u?new Set(_g(`toeic_fav_${u}`,[])):new Set(); }
 function saveFavorites()  { const u=getCurrentUser(); if(u) _s(`toeic_fav_${u}`,[...state.favorites]); }
+function loadNotes()      { const u=getCurrentUser(); return u?_g(`toeic_notes_${u}`,{}):{}; }
+function saveNotes()      { const u=getCurrentUser(); if(u) _s(`toeic_notes_${u}`,state.notes); }
 
 function loadPracticeSession() { const u=getCurrentUser(); return u?_g(`toeic_practice_${u}`,null):null; }
 function savePracticeSession() {
@@ -71,6 +73,7 @@ const state = {
   correct: new Set(),
   wrong: new Set(),
   favorites: new Set(),
+  notes: {},
 };
 
 // ── Shuffle & Priority ─────────────────────────────────────────────────────
@@ -300,6 +303,18 @@ function renderHome() {
     </div>
 
     <button class="btn-secondary" data-action="goto-progress" style="width:100%;margin-top:4px">📊 學習進度與歷史記錄</button>
+
+    <div class="changelog-section">
+      <h3>📋 版本更新記錄</h3>
+      <div class="changelog-list">
+        <div class="changelog-item"><span class="cl-version">v20260418_006</span><span class="cl-desc">新增筆記功能（錯題與最愛）、刪除錯題、版本更新記錄</span></div>
+        <div class="changelog-item"><span class="cl-version">v20260418_005</span><span class="cl-desc">新增一鍵複製題目、我的最愛星星收藏功能</span></div>
+        <div class="changelog-item"><span class="cl-version">v20260418_004</span><span class="cl-desc">解析改為條列式，依每個選項逐條顯示</span></div>
+        <div class="changelog-item"><span class="cl-version">v20260418_003</span><span class="cl-desc">所有題目解析翻譯為繁體中文</span></div>
+        <div class="changelog-item"><span class="cl-version">v20260418_002</span><span class="cl-desc">修正頁面無法載入（const 重複宣告）問題</span></div>
+        <div class="changelog-item"><span class="cl-version">v20260418_001</span><span class="cl-desc">全新設計：練習模式、完整測驗、錯題複習、iPhone Safari 優化</span></div>
+      </div>
+    </div>
   </div>`;
 }
 
@@ -574,14 +589,16 @@ function renderWrongReview() {
   }
 
   const items = wrongQs.map((q,i) => {
-    const qText = (q.text||q.question);
+    const qText = q.text||q.question;
     const preview = qText.length>60 ? qText.substring(0,60)+'…' : qText;
     const psg = passageHtml(q);
-    return `<div class="wrong-item">
+    const note = state.notes[q.id]||'';
+    return `<div class="wrong-item" id="witem-${q.id}">
       <div class="wrong-item-head" data-action="toggle-wrong" data-idx="${i}">
         <div class="wrong-item-meta">
           <span class="part-tag">${PART_LABELS[q.part]?.label}</span>
           <span class="diff-tag ${q.difficulty}">${DIFFICULTY_LABELS[q.difficulty]?.label}</span>
+          ${note ? '<span class="note-dot" title="有筆記">📝</span>' : ''}
         </div>
         <div class="wrong-item-preview">${preview}</div>
         <span class="wrong-toggle" id="wtoggle-${i}">▼</span>
@@ -596,6 +613,15 @@ function renderWrongReview() {
           }).join('')}
         </div>
         ${formatExplanation(q.explanation)}
+        <div class="note-block">
+          <div class="note-label">📝 我的筆記</div>
+          <textarea class="note-textarea" data-note-qid="${q.id}" placeholder="在這裡寫下你的筆記...">${note}</textarea>
+        </div>
+        <div class="item-actions">
+          <button class="btn-copy" data-action="copy-question" data-qid="${q.id}">📋 複製</button>
+          <button class="btn-star ${state.favorites.has(q.id)?'star-on':''}" data-action="toggle-favorite" data-qid="${q.id}">${state.favorites.has(q.id)?'★':'☆'}</button>
+          <button class="btn-delete-wrong" data-action="delete-wrong" data-qid="${q.id}">🗑️ 移除錯題</button>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -604,7 +630,7 @@ function renderWrongReview() {
   <div class="wrong-review-view">
     <button class="btn-back" data-action="goto-home">← 返回首頁</button>
     <h2>❌ 我的錯題 (${wrongQs.length} 題)</h2>
-    <p class="wrong-hint">點擊題目展開查看正確答案與解釋</p>
+    <p class="wrong-hint">展開查看解析 · 可寫筆記 · 可移除錯題</p>
     <div class="wrong-list">${items}</div>
   </div>`;
 }
@@ -625,11 +651,13 @@ function renderFavorites() {
     const qText = q.text||q.question;
     const preview = qText.length>60 ? qText.substring(0,60)+'…' : qText;
     const psg = passageHtml(q);
+    const note = state.notes[q.id]||'';
     return `<div class="wrong-item" style="border-left-color:var(--gold)">
       <div class="wrong-item-head" data-action="toggle-fav-item" data-idx="${i}">
         <div class="wrong-item-meta">
           <span class="part-tag">${PART_LABELS[q.part]?.label}</span>
           <span class="diff-tag ${q.difficulty}">${DIFFICULTY_LABELS[q.difficulty]?.label}</span>
+          ${note ? '<span class="note-dot" title="有筆記">📝</span>' : ''}
         </div>
         <div class="wrong-item-preview">${preview}</div>
         <span class="wrong-toggle" id="ftoggle-${i}">▼</span>
@@ -644,9 +672,13 @@ function renderFavorites() {
           }).join('')}
         </div>
         ${formatExplanation(q.explanation)}
-        <div style="display:flex;gap:8px;margin-top:10px">
+        <div class="note-block">
+          <div class="note-label">📝 我的筆記</div>
+          <textarea class="note-textarea" data-note-qid="${q.id}" placeholder="在這裡寫下你的筆記...">${note}</textarea>
+        </div>
+        <div class="item-actions">
+          <button class="btn-copy" data-action="copy-question" data-qid="${q.id}">📋 複製</button>
           <button class="btn-star star-on" data-action="toggle-favorite" data-qid="${q.id}">★ 取消收藏</button>
-          <button class="btn-copy" data-action="copy-question" data-qid="${q.id}">📋 複製題目</button>
         </div>
       </div>
     </div>`;
@@ -656,7 +688,7 @@ function renderFavorites() {
   <div class="wrong-review-view">
     <button class="btn-back" data-action="goto-home">← 返回首頁</button>
     <h2>⭐ 我的最愛 (${favQs.length} 題)</h2>
-    <p class="wrong-hint">點擊題目展開查看解析</p>
+    <p class="wrong-hint">展開查看解析 · 可寫筆記</p>
     <div class="wrong-list">${items}</div>
   </div>`;
 }
@@ -722,13 +754,19 @@ function attachEvents() {
   if (pwd) { pwd.addEventListener('keydown', e=>{ if(e.key==='Enter') submitLogin(); }); pwd.focus(); }
   const usr = document.getElementById('login-username');
   if (usr) usr.addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('login-password')?.focus(); });
+  document.querySelectorAll('.note-textarea').forEach(ta => {
+    ta.addEventListener('blur', () => {
+      const noteQid = ta.dataset.noteQid;
+      if (noteQid) { state.notes[noteQid] = ta.value; saveNotes(); }
+    });
+  });
 }
 
 function submitLogin() {
   const u = document.getElementById('login-username')?.value.trim()||'';
   const p = document.getElementById('login-password')?.value||'';
   if (doLogin(u,p)) {
-    state.stats=loadStats(); state.history=loadHistory(); state.correct=loadCorrect(); state.wrong=loadWrong(); state.favorites=loadFavorites();
+    state.stats=loadStats(); state.history=loadHistory(); state.correct=loadCorrect(); state.wrong=loadWrong(); state.favorites=loadFavorites(); state.notes=loadNotes();
     state.view='home'; render();
   } else {
     const err=document.getElementById('login-error'); if(err) err.style.display='block';
@@ -845,10 +883,17 @@ function handleAction(e) {
       break;
     }
 
+    case 'delete-wrong': {
+      state.wrong.delete(qid);
+      saveWrong();
+      render();
+      break;
+    }
+
     case 'clear-stats':
       if(confirm('確定清除所有記錄？此操作無法復原。')) {
-        state.stats={}; state.history=[]; state.correct=new Set(); state.wrong=new Set(); state.favorites=new Set();
-        saveStats(); saveHistory(); saveCorrect(); saveWrong(); saveFavorites();
+        state.stats={}; state.history=[]; state.correct=new Set(); state.wrong=new Set(); state.favorites=new Set(); state.notes={};
+        saveStats(); saveHistory(); saveCorrect(); saveWrong(); saveFavorites(); saveNotes();
         clearPracticeSession(); clearExamSession();
         render();
       }
@@ -947,7 +992,7 @@ function checkVersion() {
 const bootUser = getCurrentUser();
 if (bootUser) {
   state.stats=loadStats(); state.history=loadHistory();
-  state.correct=loadCorrect(); state.wrong=loadWrong(); state.favorites=loadFavorites();
+  state.correct=loadCorrect(); state.wrong=loadWrong(); state.favorites=loadFavorites(); state.notes=loadNotes();
   state.view='home';
 }
 render();
