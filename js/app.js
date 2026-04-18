@@ -1,223 +1,151 @@
-// ── Auth ───────────────────────────────────────────────────────────────────
-const USERS = {
-  'pyc':   'pyc0321',
-  'felix': 'felix'
+'use strict';
+
+// ── Constants ──────────────────────────────────────────────────────────────
+const USERS = { 'pyc': 'pyc0321', 'felix': 'felix' };
+
+const PART_LABELS = {
+  part5: { label: 'Part 5', name: '文法選填', icon: '✏️', description: '單句填空，測驗詞性、時態、介系詞' },
+  part6: { label: 'Part 6', name: '段落選填', icon: '📝', description: '段落填空，測驗語境理解與文法' },
+  part7: { label: 'Part 7', name: '閱讀理解', icon: '📖', description: '單篇、雙篇、三篇閱讀理解' },
 };
 
-function getCurrentUser() {
-  return sessionStorage.getItem('toeic_user');
-}
+const DIFFICULTY_LABELS = {
+  easy:   { label: '初級', color: '#27ae60' },
+  medium: { label: '中級', color: '#f39c12' },
+  hard:   { label: '高級', color: '#e74c3c' },
+};
 
-function doLogin(username, password) {
-  if (USERS[username] && USERS[username] === password) {
-    sessionStorage.setItem('toeic_user', username);
-    return true;
-  }
+// ── Auth ───────────────────────────────────────────────────────────────────
+function getCurrentUser() { return sessionStorage.getItem('toeic_user'); }
+
+function doLogin(u, p) {
+  if (USERS[u] && USERS[u] === p) { sessionStorage.setItem('toeic_user', u); return true; }
   return false;
 }
 
 function doLogout() {
   sessionStorage.removeItem('toeic_user');
-  stopTimer();
-  state.view = 'login';
-  state.stats = {};
-  state.history = [];
-  state.correct = new Set();
+  Object.assign(state, { view:'login', stats:{}, history:[], correct:new Set(), wrong:new Set() });
   render();
 }
 
-// ── Storage (user-namespaced) ──────────────────────────────────────────────
-function loadStats() {
-  const u = getCurrentUser(); if (!u) return {};
-  try { return JSON.parse(localStorage.getItem(`toeic_stats_${u}`) || '{}'); } catch { return {}; }
-}
+// ── Storage ────────────────────────────────────────────────────────────────
+const _g = (k, fb) => { try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : fb; } catch { return fb; } };
+const _s = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
-function saveStats() {
-  const u = getCurrentUser(); if (!u) return;
-  localStorage.setItem(`toeic_stats_${u}`, JSON.stringify(state.stats));
-}
+function loadStats()   { const u=getCurrentUser(); return u?_g(`toeic_stats_${u}`,{}):{}; }
+function saveStats()   { const u=getCurrentUser(); if(u) _s(`toeic_stats_${u}`,state.stats); }
+function loadHistory() { const u=getCurrentUser(); return u?_g(`toeic_history_${u}`,[]):[]; }
+function saveHistory() { const u=getCurrentUser(); if(u) _s(`toeic_history_${u}`,state.history); }
+function loadCorrect() { const u=getCurrentUser(); return u?new Set(_g(`toeic_correct_${u}`,[])):new Set(); }
+function saveCorrect() { const u=getCurrentUser(); if(u) _s(`toeic_correct_${u}`,[...state.correct]); }
+function loadWrong()   { const u=getCurrentUser(); return u?new Set(_g(`toeic_wrong_${u}`,[])):new Set(); }
+function saveWrong()   { const u=getCurrentUser(); if(u) _s(`toeic_wrong_${u}`,[...state.wrong]); }
 
-function loadHistory() {
-  const u = getCurrentUser(); if (!u) return [];
-  try { return JSON.parse(localStorage.getItem(`toeic_history_${u}`) || '[]'); } catch { return []; }
+function loadPracticeSession() { const u=getCurrentUser(); return u?_g(`toeic_practice_${u}`,null):null; }
+function savePracticeSession() {
+  const u=getCurrentUser(); if(!u) return;
+  _s(`toeic_practice_${u}`,{ questionIds:state.questions.map(q=>q.id), currentIndex:state.currentIndex, savedAt:new Date().toISOString() });
 }
+function clearPracticeSession() { const u=getCurrentUser(); if(u) localStorage.removeItem(`toeic_practice_${u}`); }
 
-function saveHistory() {
-  const u = getCurrentUser(); if (!u) return;
-  localStorage.setItem(`toeic_history_${u}`, JSON.stringify(state.history));
+function loadExamSession()  { const u=getCurrentUser(); return u?_g(`toeic_exam_${u}`,null):null; }
+function saveExamSession()  {
+  const u=getCurrentUser(); if(!u) return;
+  _s(`toeic_exam_${u}`,{ questionIds:state.questions.map(q=>q.id), answers:state.answers, currentIndex:state.currentIndex, savedAt:new Date().toISOString() });
 }
-
-function saveQuizSession() {
-  const u = getCurrentUser(); if (!u) return;
-  localStorage.setItem(`toeic_session_${u}`, JSON.stringify({
-    questionIds: state.questions.map(q => q.id),
-    answers: state.answers,
-    currentIndex: state.currentIndex,
-    selectedPart: state.selectedPart,
-    selectedDifficulty: state.selectedDifficulty,
-    timeRemaining: state.timeRemaining,
-    savedAt: new Date().toISOString()
-  }));
-}
-
-function loadQuizSession() {
-  const u = getCurrentUser(); if (!u) return null;
-  try { return JSON.parse(localStorage.getItem(`toeic_session_${u}`)); } catch { return null; }
-}
-
-function clearQuizSession() {
-  const u = getCurrentUser(); if (!u) return;
-  localStorage.removeItem(`toeic_session_${u}`);
-}
-
-function loadCorrect() {
-  const u = getCurrentUser(); if (!u) return new Set();
-  try { return new Set(JSON.parse(localStorage.getItem(`toeic_correct_${u}`) || '[]')); } catch { return new Set(); }
-}
+function clearExamSession() { const u=getCurrentUser(); if(u) localStorage.removeItem(`toeic_exam_${u}`); }
 
 function getAnyUserSnapshot(username) {
   try {
-    const stats   = JSON.parse(localStorage.getItem(`toeic_stats_${username}`)   || '{}');
-    const history = JSON.parse(localStorage.getItem(`toeic_history_${username}`) || '[]');
-    const correct = JSON.parse(localStorage.getItem(`toeic_correct_${username}`) || '[]');
-    const attempts = Object.values(stats).reduce((s, v) => s + (v.attempts || 0), 0);
-    const bestOverall = Object.values(stats).reduce((m, v) => Math.max(m, v.best || 0), 0);
-    return { stats, history, masteredCount: correct.length, attempts, bestOverall };
-  } catch { return { stats: {}, history: [], masteredCount: 0, attempts: 0, bestOverall: 0 }; }
-}
-
-function saveCorrect() {
-  const u = getCurrentUser(); if (!u) return;
-  localStorage.setItem(`toeic_correct_${u}`, JSON.stringify([...state.correct]));
-}
-
-// ── Shuffle ────────────────────────────────────────────────────────────────
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-function prioritize(questions) {
-  const unseen  = shuffle(questions.filter(q => !state.correct.has(q.id)));
-  const mastered = shuffle(questions.filter(q => state.correct.has(q.id)));
-  return [...unseen, ...mastered];
+    const stats   = _g(`toeic_stats_${username}`,{});
+    const history = _g(`toeic_history_${username}`,[]);
+    const correct = _g(`toeic_correct_${username}`,[]);
+    const wrong   = _g(`toeic_wrong_${username}`,[]);
+    const attempts = Object.values(stats).reduce((s,v)=>s+(v.attempts||0),0);
+    return { stats, history, masteredCount:correct.length, wrongCount:wrong.length, attempts };
+  } catch { return { stats:{}, history:[], masteredCount:0, wrongCount:0, attempts:0 }; }
 }
 
 // ── State ──────────────────────────────────────────────────────────────────
 const state = {
   view: 'login',
-  selectedPart: null,
-  selectedDifficulty: null,
   questions: [],
   currentIndex: 0,
   answers: {},
-  startTime: null,
-  timeLimit: 0,
-  timerInterval: null,
-  timeRemaining: 0,
-  mode: 'practice',
-  reviewPassageId: null,
+  showResult: false,
   stats: {},
   history: [],
-  correct: new Set()
+  correct: new Set(),
+  wrong: new Set(),
 };
 
+// ── Shuffle & Priority ─────────────────────────────────────────────────────
+function shuffle(arr) {
+  for (let i=arr.length-1;i>0;i--) {
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+function prioritize(qs) {
+  return [...shuffle(qs.filter(q=>!state.correct.has(q.id))), ...shuffle(qs.filter(q=>state.correct.has(q.id)))];
+}
+
 // ── Question Builder ───────────────────────────────────────────────────────
-function buildQuestions(part, difficulty) {
-  if (part === 'all') {
-    return ['part5', 'part6', 'part7'].flatMap(p => buildQuestions(p, difficulty));
-  }
-  const bank = QUESTION_BANK[part] && QUESTION_BANK[part][difficulty];
-  if (!bank) return [];
-
-  if (part === 'part5') {
-    return bank.map(q => ({ ...q, part, difficulty, passageId: null }));
-  }
-
-  if (part === 'part6') {
-    const questions = [];
-    bank.forEach(passage => {
-      passage.questions.forEach(q => {
-        questions.push({ ...q, part, difficulty, passageId: passage.id, passage: passage.passage });
-      });
+let _qCache = null;
+function buildAllQuestions() {
+  if (_qCache) return _qCache;
+  const all = [];
+  ['part5','part6','part7'].forEach(part => {
+    ['easy','medium','hard'].forEach(difficulty => {
+      const bank = QUESTION_BANK[part]?.[difficulty];
+      if (!bank) return;
+      if (part==='part5') {
+        bank.forEach(q => all.push({...q, part, difficulty}));
+      } else if (part==='part6') {
+        bank.forEach(passage => passage.questions.forEach(q =>
+          all.push({...q, part, difficulty, passageId:passage.id, passage:passage.passage})));
+      } else if (part==='part7') {
+        bank.forEach(passage => passage.questions.forEach(q =>
+          all.push({...q, part, difficulty, passageId:passage.id, passageData:passage})));
+      }
     });
-    return questions;
-  }
-
-  if (part === 'part7') {
-    const questions = [];
-    bank.forEach(passage => {
-      passage.questions.forEach(q => {
-        questions.push({ ...q, part, difficulty, passageId: passage.id, passageData: passage });
-      });
-    });
-    return questions;
-  }
-  return [];
-}
-
-// ── Timer ──────────────────────────────────────────────────────────────────
-function startTimer(seconds) {
-  state.timeRemaining = seconds;
-  updateTimerDisplay();
-  state.timerInterval = setInterval(() => {
-    state.timeRemaining--;
-    updateTimerDisplay();
-    if (state.timeRemaining <= 0) {
-      clearInterval(state.timerInterval);
-      finishQuiz();
-    }
-  }, 1000);
-}
-
-function updateTimerDisplay() {
-  const el = document.getElementById('timer-display');
-  if (!el) return;
-  const m = Math.floor(state.timeRemaining / 60).toString().padStart(2, '0');
-  const s = (state.timeRemaining % 60).toString().padStart(2, '0');
-  el.textContent = `${m}:${s}`;
-  el.classList.toggle('timer-warning', state.timeRemaining <= 60);
-}
-
-function stopTimer() {
-  if (state.timerInterval) {
-    clearInterval(state.timerInterval);
-    state.timerInterval = null;
-  }
-}
-
-// ── Scoring ────────────────────────────────────────────────────────────────
-function calculateScore() {
-  let correct = 0;
-  state.questions.forEach(q => {
-    if (state.answers[q.id] === q.answer) correct++;
   });
-  return { correct, total: state.questions.length, pct: Math.round((correct / state.questions.length) * 100) };
+  _qCache = all;
+  return all;
+}
+function totalQ() { return buildAllQuestions().length; }
+
+// ── Passage HTML helper ────────────────────────────────────────────────────
+function passageHtml(q) {
+  if (q.part==='part6' && q.passage) {
+    return `<div class="passage-box"><div class="passage-label">📄 段落文章</div><pre class="passage-text">${q.passage}</pre></div>`;
+  }
+  if (q.part==='part7' && q.passageData) {
+    const pd = q.passageData;
+    if (pd.type==='single') return `<div class="passage-box"><div class="passage-label">📄 ${pd.title}</div><pre class="passage-text">${pd.passage}</pre></div>`;
+    return `<div class="passage-box"><div class="passage-label">📄 ${pd.title} (多篇閱讀)</div>${pd.passages.map(p=>`<div class="sub-passage"><div class="sub-label">${p.label}</div><pre class="passage-text">${p.content}</pre></div>`).join('')}</div>`;
+  }
+  return '';
 }
 
-function estimateToeicScore(pct, difficulty) {
-  const base = { easy: 400, medium: 600, hard: 750 }[difficulty] || 500;
-  const range = { easy: 200, medium: 150, hard: 150 }[difficulty] || 150;
-  return Math.min(990, Math.round(base + (pct / 100) * range));
-}
-
-// ── Render Views ───────────────────────────────────────────────────────────
+// ── Render Dispatcher ──────────────────────────────────────────────────────
 function render() {
   const app = document.getElementById('app');
   switch (state.view) {
-    case 'login':    app.innerHTML = renderLogin();    break;
-    case 'home':     app.innerHTML = renderHome();     break;
-    case 'select':   app.innerHTML = renderSelect();   break;
-    case 'quiz':     app.innerHTML = renderQuiz();     break;
-    case 'results':  app.innerHTML = renderResults();  break;
-    case 'progress': app.innerHTML = renderProgress(); break;
+    case 'login':        app.innerHTML = renderLogin();       break;
+    case 'home':         app.innerHTML = renderHome();        break;
+    case 'practice':     app.innerHTML = renderPractice();    break;
+    case 'exam':         app.innerHTML = renderExam();        break;
+    case 'exam-results': app.innerHTML = renderExamResults(); break;
+    case 'wrong-review': app.innerHTML = renderWrongReview(); break;
+    case 'progress':     app.innerHTML = renderProgress();    break;
   }
   attachEvents();
 }
 
+// ── renderLogin ────────────────────────────────────────────────────────────
 function renderLogin() {
   return `
   <div class="login-view">
@@ -241,15 +169,49 @@ function renderLogin() {
   </div>`;
 }
 
+// ── renderHome ─────────────────────────────────────────────────────────────
 function renderHome() {
   const user = getCurrentUser();
-  const totalAttempts = Object.values(state.stats).reduce((s, v) => s + (v.attempts || 0), 0);
-  const bestScores = Object.entries(state.stats).map(([k, v]) => `<span class="badge">${k}: ${v.best || 0}%</span>`).join('');
-  const totalQ = ['part5','part6','part7'].reduce((t,p) =>
-    t + ['easy','medium','hard'].reduce((s,d) => {
-      const b = QUESTION_BANK[p][d];
-      return s + (p === 'part5' ? b.length : b.reduce((x,g) => x + g.questions.length, 0));
-    }, 0), 0);
+  const practiceSession = loadPracticeSession();
+  const examSession = loadExamSession();
+
+  let banners = '';
+  if (practiceSession) {
+    const idx = practiceSession.currentIndex || 0;
+    const tot = (practiceSession.questionIds||[]).length;
+    const d = new Date(practiceSession.savedAt);
+    const ds = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    banners += `<div class="resume-banner">
+      <div class="resume-info">
+        <div class="resume-title">📌 未完成的練習</div>
+        <div class="resume-detail">已完成 ${idx} / ${tot} 題 · 儲存於 ${ds}</div>
+      </div>
+      <div class="resume-actions">
+        <button class="btn-resume" data-action="resume-practice">繼續</button>
+        <button class="btn-discard" data-action="discard-practice">放棄</button>
+      </div>
+    </div>`;
+  }
+  if (examSession) {
+    const answered = Object.keys(examSession.answers||{}).length;
+    const tot = (examSession.questionIds||[]).length;
+    const d = new Date(examSession.savedAt);
+    const ds = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    banners += `<div class="resume-banner resume-exam">
+      <div class="resume-info">
+        <div class="resume-title">📋 未完成的完整測驗</div>
+        <div class="resume-detail">已作答 ${answered} / ${tot} 題 · 儲存於 ${ds}</div>
+      </div>
+      <div class="resume-actions">
+        <button class="btn-resume" data-action="resume-exam">繼續</button>
+        <button class="btn-discard" data-action="discard-exam">放棄</button>
+      </div>
+    </div>`;
+  }
+
+  const tq = totalQ();
+  const mastered = state.correct.size;
+  const wrongCnt = state.wrong.size;
 
   return `
   <div class="home-view">
@@ -258,301 +220,286 @@ function renderHome() {
       <button class="btn-logout" data-action="logout">登出</button>
     </div>
 
-    <div class="hero">
-      <div class="hero-icon">🎯</div>
-      <h1>TOEIC 閱讀練習平台</h1>
-      <p class="hero-sub">針對科技業頂尖英文要求設計 · 目標 750+ 分</p>
-      <div class="score-target-badges">
-        <span class="target-badge easy">初級 400–600</span>
-        <span class="target-badge medium">中級 600–750</span>
-        <span class="target-badge hard">高級 750–900+</span>
-      </div>
+    ${renderVersus()}
+
+    ${banners}
+
+    <div class="home-actions">
+      <button class="btn-action btn-action-practice" data-action="start-practice">
+        <span class="action-icon">📖</span>
+        <span class="action-body">
+          <span class="action-title">開始練習</span>
+          <span class="action-desc">每題作答後立即看解釋，隨時可暫停繼續</span>
+        </span>
+        <span class="action-arrow">›</span>
+      </button>
+      <button class="btn-action btn-action-exam" data-action="start-exam">
+        <span class="action-icon">📋</span>
+        <span class="action-body">
+          <span class="action-title">完整測驗</span>
+          <span class="action-desc">混合所有題目，提交後才看答案與解釋</span>
+        </span>
+        <span class="action-arrow">›</span>
+      </button>
+      ${wrongCnt > 0 ? `
+      <button class="btn-action btn-action-wrong" data-action="goto-wrong-review">
+        <span class="action-icon">❌</span>
+        <span class="action-body">
+          <span class="action-title">我的錯題</span>
+          <span class="action-desc">${wrongCnt} 題需要複習</span>
+        </span>
+        <span class="action-arrow">›</span>
+      </button>` : ''}
     </div>
 
     <div class="stats-bar">
       <div class="stat-item">
-        <span class="stat-num">${totalAttempts}</span>
-        <span class="stat-label">練習次數</span>
+        <span class="stat-num">${tq}</span>
+        <span class="stat-label">題目總數</span>
       </div>
       <div class="stat-item">
-        <span class="stat-num">${totalQ}+</span>
-        <span class="stat-label">題目數量</span>
+        <span class="stat-num" style="color:var(--green)">${mastered}</span>
+        <span class="stat-label">已掌握</span>
       </div>
       <div class="stat-item">
-        <span class="stat-num">3</span>
-        <span class="stat-label">難度等級</span>
+        <span class="stat-num" style="color:var(--red)">${wrongCnt}</span>
+        <span class="stat-label">需複習</span>
       </div>
-    </div>
-
-    ${(() => {
-      const session = loadQuizSession();
-      if (!session) return '';
-      const partLabel = session.selectedPart === 'all' ? '完整測驗' : (PART_LABELS[session.selectedPart]?.label || session.selectedPart);
-      const diffLabel = DIFFICULTY_LABELS[session.selectedDifficulty]?.label || session.selectedDifficulty;
-      const answered = Object.keys(session.answers || {}).length;
-      const total = (session.questionIds || []).length;
-      const d = new Date(session.savedAt);
-      const dateStr = `${d.getMonth()+1}/${d.getDate()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
-      return `<div class="resume-banner">
-        <div class="resume-info">
-          <div class="resume-title">📌 有未完成的練習</div>
-          <div class="resume-detail">${partLabel} · ${diffLabel} — 已作答 ${answered} / ${total} 題 · 儲存於 ${dateStr}</div>
-        </div>
-        <div class="resume-actions">
-          <button class="btn-resume" data-action="resume-quiz">繼續作答</button>
-          <button class="btn-discard" data-action="discard-session">放棄</button>
-        </div>
-      </div>`;
-    })()}
-
-    ${totalAttempts > 0 ? `<div class="best-scores">${bestScores}</div>` : ''}
-
-    <div class="part-grid">
-      ${Object.entries(PART_LABELS).map(([key, p]) => `
-        <div class="part-card" data-action="goto-select" data-part="${key}">
-          <div class="part-icon">${p.icon}</div>
-          <div class="part-info">
-            <div class="part-label">${p.label}</div>
-            <div class="part-name">${p.name}</div>
-            <div class="part-desc">${p.description}</div>
-          </div>
-          <div class="part-arrow">→</div>
-        </div>
-      `).join('')}
-    </div>
-
-    <div class="full-test-btn-wrap">
-      <button class="btn-full-test" data-action="goto-select" data-part="all">
-        📋 完整閱讀模擬測驗 (Part 5 + 6 + 7)
-      </button>
     </div>
 
     <div class="site-intro">
-      <h3>這是什麼網站？</h3>
-      <p>本平台是一個專為備考 TOEIC 閱讀測驗設計的練習網站，題目涵蓋 Part 5、Part 6、Part 7 三大題型，共 <strong>${totalQ} 題</strong>，分為初級、中級、高級三個難度，目標是幫助你達到科技大廠的英文門檻（700–800+ 分）。</p>
+      <h3>關於這個平台</h3>
+      <p>涵蓋 Part 5、Part 6、Part 7，共 <strong>${tq} 題</strong>，分初中高三個難度。智慧出題系統會將做對的題目排到後面，幫你集中練習弱點，目標 750+ 分。</p>
       <div class="intro-grid">
-        <div class="intro-item">
-          <div class="intro-icon">✏️</div>
-          <div>
-            <strong>Part 5 — 文法選填</strong>
-            <span>${['easy','medium','hard'].reduce((s,d)=>s+QUESTION_BANK.part5[d].length,0)} 題｜單句填空，測驗詞性、時態、介系詞等文法概念</span>
-          </div>
-        </div>
-        <div class="intro-item">
-          <div class="intro-icon">📝</div>
-          <div>
-            <strong>Part 6 — 段落選填</strong>
-            <span>${['easy','medium','hard'].reduce((s,d)=>s+QUESTION_BANK.part6[d].reduce((x,g)=>x+g.questions.length,0),0)} 題｜閱讀完整短文後填入最適合的選項，測驗語境理解</span>
-          </div>
-        </div>
-        <div class="intro-item">
-          <div class="intro-icon">📖</div>
-          <div>
-            <strong>Part 7 — 閱讀理解</strong>
-            <span>${['easy','medium','hard'].reduce((s,d)=>s+QUESTION_BANK.part7[d].reduce((x,g)=>x+g.questions.length,0),0)} 題｜單篇、雙篇、三篇閱讀，涵蓋商業信件、公告、報告等題材</span>
-          </div>
-        </div>
-        <div class="intro-item">
-          <div class="intro-icon">🧠</div>
-          <div>
-            <strong>智慧出題系統</strong>
-            <span>每次隨機排列 · 答對的題目自動降低出現頻率 · 幫你集中火力攻克弱點</span>
-          </div>
-        </div>
+        <div class="intro-item"><div class="intro-icon">✏️</div><div><strong>Part 5 文法選填</strong><span>${['easy','medium','hard'].reduce((s,d)=>s+QUESTION_BANK.part5[d].length,0)} 題</span></div></div>
+        <div class="intro-item"><div class="intro-icon">📝</div><div><strong>Part 6 段落選填</strong><span>${['easy','medium','hard'].reduce((s,d)=>s+QUESTION_BANK.part6[d].reduce((x,g)=>x+g.questions.length,0),0)} 題</span></div></div>
+        <div class="intro-item"><div class="intro-icon">📖</div><div><strong>Part 7 閱讀理解</strong><span>${['easy','medium','hard'].reduce((s,d)=>s+QUESTION_BANK.part7[d].reduce((x,g)=>x+g.questions.length,0),0)} 題</span></div></div>
       </div>
     </div>
 
-    <div class="toeic-info">
-      <h3>📌 TOEIC 正式考試結構</h3>
-      <div class="info-grid">
-        <div class="info-card">
-          <strong>Part 5</strong>
-          <span>文法選填 30題</span>
-          <span>單句填空測驗文法與詞彙</span>
-        </div>
-        <div class="info-card">
-          <strong>Part 6</strong>
-          <span>段落選填 16題</span>
-          <span>4篇短文，每篇4個填空</span>
-        </div>
-        <div class="info-card">
-          <strong>Part 7</strong>
-          <span>閱讀理解 54題</span>
-          <span>單篇、雙篇、三篇閱讀</span>
-        </div>
-      </div>
-    </div>
-
-    <button class="btn-secondary" data-action="goto-progress">📊 我的學習進度</button>
+    <button class="btn-secondary" data-action="goto-progress" style="width:100%;margin-top:4px">📊 學習進度與歷史記錄</button>
   </div>`;
 }
 
-function renderSelect() {
-  return `
-  <div class="select-view">
-    <button class="btn-back" data-action="goto-home">← 返回首頁</button>
-    <h2>${state.selectedPart === 'all' ? '📋 完整閱讀模擬測驗 — 選擇難度' : state.selectedPart ? `${PART_LABELS[state.selectedPart]?.icon} ${PART_LABELS[state.selectedPart]?.label} — 選擇難度` : '選擇練習部分與難度'}</h2>
+// ── renderVersus ───────────────────────────────────────────────────────────
+function renderVersus() {
+  const me = getCurrentUser();
+  const others = Object.keys(USERS).filter(u=>u!==me);
+  if (!others.length) return '';
 
-    ${(!state.selectedPart) ? `
-    <div class="select-section">
-      <p class="select-hint">選擇練習部分：</p>
-      <div class="difficulty-grid">
-        ${Object.entries(PART_LABELS).map(([key, p]) => `
-          <button class="diff-card" data-action="select-part" data-value="${key}">
-            <span class="diff-icon">${p.icon}</span>
-            <span class="diff-label">${p.label}</span>
-            <span class="diff-desc">${p.name}</span>
-          </button>
-        `).join('')}
+  const mySnap = {
+    masteredCount: state.correct.size,
+    wrongCount: state.wrong.size,
+    attempts: Object.values(state.stats).reduce((s,v)=>s+(v.attempts||0),0),
+    history: state.history
+  };
+
+  return others.map(rival => {
+    const rv = getAnyUserSnapshot(rival);
+    const myLead = mySnap.masteredCount > rv.masteredCount;
+    const rvLead = rv.masteredCount > mySnap.masteredCount;
+
+    const row = (label, mv, rv2, hi=true) => {
+      const mw = hi ? mv>rv2 : mv<rv2;
+      const rw = hi ? rv2>mv : rv2<mv;
+      return `<div class="vs-row">
+        <span class="vs-val ${mw?'win':rw?'lose':''}">${mv}</span>
+        <span class="vs-lbl">${label}</span>
+        <span class="vs-val ${rw?'win':mw?'lose':''}">${rv2}</span>
+      </div>`;
+    };
+
+    const recentHtml = (hist) => {
+      if (!hist.length) return `<div class="vs-recent-item" style="color:var(--text-muted)">尚無記錄</div>`;
+      return hist.slice(0,3).map(h => {
+        const label = h.type==='exam'?'測驗':h.type==='practice'?'練習':(PART_LABELS[h.part]?.label||'練習');
+        const c = h.pct>=80?'#27ae60':h.pct>=60?'#f39c12':'#e74c3c';
+        return `<div class="vs-recent-item"><span>${label}</span><span style="color:${c};font-weight:700">${h.pct}%</span></div>`;
+      }).join('');
+    };
+
+    return `<div class="versus-card">
+      <div class="versus-head">
+        <div class="vs-player ${myLead?'leading':''}">
+          <div class="vs-name">👤 ${me}</div>
+          <div class="vs-status">${myLead?'領先':rvLead?'落後':'平手'}</div>
+        </div>
+        <div class="vs-vs">VS</div>
+        <div class="vs-player ${rvLead?'leading':''}">
+          <div class="vs-name">👤 ${rival}</div>
+          <div class="vs-status">${rvLead?'領先':myLead?'落後':'平手'}</div>
+        </div>
       </div>
-    </div>
-    ` : ''}
-
-    ${(state.selectedPart) ? `
-    <div class="select-section">
-      <p class="select-hint">選擇難度等級：</p>
-      <div class="difficulty-grid">
-        ${Object.entries(DIFFICULTY_LABELS).map(([key, d]) => `
-          <button class="diff-card" data-action="select-difficulty" data-value="${key}" style="border-color: ${d.color}">
-            <span class="diff-score" style="color:${d.color}">${d.targetScore}</span>
-            <span class="diff-label" style="color:${d.color}">${d.label}</span>
-            <span class="diff-desc">${d.description}</span>
-            ${state.stats[`${state.selectedPart}_${key}`] ? `<span class="diff-best">最佳: ${state.stats[`${state.selectedPart}_${key}`].best}%</span>` : ''}
-          </button>
-        `).join('')}
+      <div class="vs-stats">
+        ${row('已掌握題數', mySnap.masteredCount, rv.masteredCount)}
+        ${row('需複習題數', mySnap.wrongCount, rv.wrongCount, false)}
+        ${row('練習總次數', mySnap.attempts, rv.attempts)}
       </div>
-    </div>
-    ` : ''}
-  </div>`;
-}
-
-function renderQuiz() {
-  const q = state.questions[state.currentIndex];
-  if (!q) return '<div>No questions</div>';
-
-  const progress = ((state.currentIndex) / state.questions.length) * 100;
-
-  let passageHtml = '';
-
-  if (q.part === 'part6' && q.passage) {
-    passageHtml = `<div class="passage-box">
-      <div class="passage-label">📄 段落文章</div>
-      <pre class="passage-text">${q.passage}</pre>
+      <div class="vs-recent">
+        <div class="vs-recent-col">${recentHtml(mySnap.history)}</div>
+        <div class="vs-divider"></div>
+        <div class="vs-recent-col">${recentHtml(rv.history)}</div>
+      </div>
     </div>`;
+  }).join('');
+}
+
+// ── renderPractice ─────────────────────────────────────────────────────────
+function renderPractice() {
+  const q = state.questions[state.currentIndex];
+  if (!q) {
+    return `<div class="practice-view"><div class="practice-header">
+      <button class="btn-back-sm" data-action="goto-home">← 回首頁</button>
+    </div><div class="empty-state">🎉 所有題目已完成！繼續保持！</div></div>`;
   }
 
-  if (q.part === 'part7' && q.passageData) {
-    const pd = q.passageData;
-    if (pd.type === 'single') {
-      passageHtml = `<div class="passage-box">
-        <div class="passage-label">📄 ${pd.title}</div>
-        <pre class="passage-text">${pd.passage}</pre>
-      </div>`;
-    } else if (pd.type === 'double' || pd.type === 'triple') {
-      passageHtml = `<div class="passage-box">
-        <div class="passage-label">📄 ${pd.title} (多篇閱讀)</div>
-        ${pd.passages.map(p => `
-          <div class="sub-passage">
-            <div class="sub-label">${p.label}</div>
-            <pre class="passage-text">${p.content}</pre>
-          </div>
-        `).join('')}
-      </div>`;
-    }
-  }
-
+  const isLast = state.currentIndex >= state.questions.length - 1;
+  const progress = Math.round((state.currentIndex / state.questions.length) * 100);
   const userAnswer = state.answers[q.id];
+  const isCorrect = userAnswer === q.answer;
+
+  const optionsHtml = q.options.map(opt => {
+    const letter = opt.charAt(0);
+    let cls = 'option-btn';
+    if (state.showResult) {
+      if (letter === q.answer) cls += ' opt-correct-show';
+      else if (letter === userAnswer) cls += ' opt-wrong-show';
+      else cls += ' opt-dim';
+    } else {
+      if (letter === userAnswer) cls += ' selected';
+    }
+    const attrs = state.showResult
+      ? 'disabled'
+      : `data-action="practice-answer" data-value="${letter}" data-qid="${q.id}"`;
+    return `<button class="${cls}" ${attrs}>${opt}</button>`;
+  }).join('');
+
+  const resultHtml = state.showResult ? `
+    <div class="practice-result ${isCorrect?'result-correct':'result-wrong'}">
+      <div class="result-badge">${isCorrect?'✓ 正確！':'✗ 答錯了'}</div>
+      ${!isCorrect ? `<div class="result-correct-ans">正確答案：${q.options.find(o=>o.charAt(0)===q.answer)||q.answer}</div>` : ''}
+      <div class="result-explain">💡 ${q.explanation}</div>
+      <button class="btn-next-q" data-action="practice-next">
+        ${isLast ? '完成練習 ✓' : '下一題 →'}
+      </button>
+    </div>` : '';
+
+  return `
+  <div class="practice-view">
+    <div class="practice-header">
+      <button class="btn-back-sm" data-action="practice-exit">← 回首頁</button>
+      <div class="practice-meta">
+        <span class="part-tag">${PART_LABELS[q.part]?.label}</span>
+        <span class="diff-tag ${q.difficulty}">${DIFFICULTY_LABELS[q.difficulty]?.label}</span>
+      </div>
+      <span class="practice-counter">${state.currentIndex+1}/${state.questions.length}</span>
+    </div>
+
+    <div class="progress-bar-wrap" style="margin-bottom:16px">
+      <div class="progress-bar" style="width:${progress}%"></div>
+    </div>
+
+    <div class="practice-body">
+      ${passageHtml(q)}
+      <div class="question-area">
+        <div class="q-number">Question ${state.currentIndex+1}</div>
+        <div class="q-text">${q.text||q.question}</div>
+        <div class="options-list">${optionsHtml}</div>
+      </div>
+      ${resultHtml}
+    </div>
+  </div>`;
+}
+
+// ── renderExam ─────────────────────────────────────────────────────────────
+function renderExam() {
+  const q = state.questions[state.currentIndex];
+  if (!q) return '<div>載入中...</div>';
+
+  const progress = Math.round((state.currentIndex / state.questions.length) * 100);
+  const userAnswer = state.answers[q.id];
+  const answeredCount = Object.keys(state.answers).length;
 
   return `
   <div class="quiz-view">
     <div class="quiz-header">
       <div class="quiz-meta">
-        <span class="quiz-part">${PART_LABELS[q.part]?.label}</span>
-        <span class="difficulty-tag ${q.difficulty}">${DIFFICULTY_LABELS[q.difficulty]?.label}</span>
+        <span class="part-tag">${PART_LABELS[q.part]?.label}</span>
+        <span class="diff-tag ${q.difficulty}">${DIFFICULTY_LABELS[q.difficulty]?.label}</span>
       </div>
-      <div id="timer-display" class="timer-display">--:--</div>
-      <button class="btn-save-exit" data-action="goto-home">💾 暫存離開</button>
-      <button class="btn-finish-early" data-action="finish-quiz">提交作答</button>
+      <button class="btn-save-exit" data-action="exam-exit">💾 暫存</button>
+      <button class="btn-finish-early" data-action="finish-exam">提交 (${answeredCount}/${state.questions.length})</button>
     </div>
 
     <div class="progress-bar-wrap">
       <div class="progress-bar" style="width:${progress}%"></div>
-      <span class="progress-text">${state.currentIndex + 1} / ${state.questions.length} 題</span>
+      <span class="progress-text">${state.currentIndex+1} / ${state.questions.length}</span>
     </div>
 
     <div class="quiz-body">
-      ${passageHtml}
+      ${passageHtml(q)}
       <div class="question-area">
-        <div class="q-number">Question ${state.currentIndex + 1}</div>
-        <div class="q-text">${q.text || q.question}</div>
+        <div class="q-number">Question ${state.currentIndex+1}</div>
+        <div class="q-text">${q.text||q.question}</div>
         <div class="options-list">
           ${q.options.map(opt => {
             const letter = opt.charAt(0);
-            const isSelected = userAnswer === letter;
-            return `<button class="option-btn ${isSelected ? 'selected' : ''}"
-              data-action="select-answer" data-value="${letter}" data-qid="${q.id}">
-              ${opt}
-            </button>`;
+            return `<button class="option-btn ${userAnswer===letter?'selected':''}"
+              data-action="exam-answer" data-value="${letter}" data-qid="${q.id}">${opt}</button>`;
           }).join('')}
         </div>
       </div>
     </div>
 
     <div class="quiz-footer">
-      <button class="btn-nav" data-action="prev-question" ${state.currentIndex === 0 ? 'disabled' : ''}>← 上一題</button>
+      <button class="btn-nav" data-action="exam-prev" ${state.currentIndex===0?'disabled':''}>← 上一題</button>
       <div class="question-dots">
-        ${state.questions.map((_, i) => {
+        ${state.questions.slice(0,80).map((_,i) => {
           const ans = state.answers[state.questions[i].id];
-          const cls = i === state.currentIndex ? 'dot-current' : (ans ? 'dot-answered' : 'dot-empty');
-          return `<span class="q-dot ${cls}" data-action="jump-question" data-index="${i}"></span>`;
+          const cls = i===state.currentIndex?'dot-current':ans?'dot-answered':'dot-empty';
+          return `<span class="q-dot ${cls}" data-action="exam-jump" data-index="${i}"></span>`;
         }).join('')}
+        ${state.questions.length>80?`<span class="dots-more">+${state.questions.length-80}</span>`:''}
       </div>
-      <button class="btn-nav btn-next" data-action="next-question">
-        ${state.currentIndex === state.questions.length - 1 ? '完成 ✓' : '下一題 →'}
+      <button class="btn-nav btn-next" data-action="exam-next">
+        ${state.currentIndex===state.questions.length-1?'完成 ✓':'下一題 →'}
       </button>
     </div>
   </div>`;
 }
 
-function renderResults() {
-  const { correct, total, pct } = calculateScore();
-  const diff = state.selectedDifficulty;
-  const estimatedScore = estimateToeicScore(pct, diff);
-  const passed = pct >= 70;
+// ── renderExamResults ──────────────────────────────────────────────────────
+function renderExamResults() {
+  let correct = 0;
+  state.questions.forEach(q => { if (state.answers[q.id]===q.answer) correct++; });
+  const total = state.questions.length;
+  const pct = total>0 ? Math.round((correct/total)*100) : 0;
 
   let grade, gradeClass;
-  if (pct >= 90) { grade = 'S'; gradeClass = 'grade-s'; }
-  else if (pct >= 80) { grade = 'A'; gradeClass = 'grade-a'; }
-  else if (pct >= 70) { grade = 'B'; gradeClass = 'grade-b'; }
-  else if (pct >= 60) { grade = 'C'; gradeClass = 'grade-c'; }
-  else { grade = 'F'; gradeClass = 'grade-f'; }
+  if (pct>=90){grade='S';gradeClass='grade-s';}
+  else if(pct>=80){grade='A';gradeClass='grade-a';}
+  else if(pct>=70){grade='B';gradeClass='grade-b';}
+  else if(pct>=60){grade='C';gradeClass='grade-c';}
+  else{grade='F';gradeClass='grade-f';}
 
-  const techTargets = [
-    { company: 'Google / Meta / Amazon', score: '800+', pass: estimatedScore >= 800 },
-    { company: 'Microsoft / Apple', score: '750+', pass: estimatedScore >= 750 },
-    { company: '台灣科技大廠 (TSMC/MediaTek)', score: '700+', pass: estimatedScore >= 700 },
-    { company: '一般科技公司', score: '600+', pass: estimatedScore >= 600 },
-  ];
-
-  const reviewHtml = state.questions.map((q, i) => {
-    const userAns = state.answers[q.id] || '未作答';
-    const isCorrect = userAns === q.answer;
-    return `
-    <div class="review-item ${isCorrect ? 'correct' : 'wrong'}">
+  const reviewHtml = state.questions.map((q,i) => {
+    const ua = state.answers[q.id]||'未作答';
+    const ok = ua===q.answer;
+    return `<div class="review-item ${ok?'correct':'wrong'}">
       <div class="review-header">
-        <span class="review-num">Q${i + 1}</span>
-        <span class="review-result">${isCorrect ? '✓ 正確' : '✗ 錯誤'}</span>
+        <span class="review-num">Q${i+1}</span>
+        <span class="part-tag" style="font-size:11px">${PART_LABELS[q.part]?.label}</span>
+        <span class="diff-tag ${q.difficulty}" style="font-size:11px">${DIFFICULTY_LABELS[q.difficulty]?.label}</span>
+        <span class="review-result">${ok?'✓ 正確':'✗ 錯誤'}</span>
       </div>
-      <div class="review-question">${q.text || q.question}</div>
+      <div class="review-question">${q.text||q.question}</div>
       <div class="review-answers">
-        ${q.options.map(opt => {
-          const letter = opt.charAt(0);
-          const isUser = userAns === letter;
-          const isCorrectOpt = q.answer === letter;
-          let cls = '';
-          if (isCorrectOpt) cls = 'opt-correct';
-          else if (isUser && !isCorrect) cls = 'opt-wrong';
-          return `<div class="review-opt ${cls}">${isUser ? '▶ ' : ''}${opt}</div>`;
+        ${q.options.map(opt=>{
+          const l=opt.charAt(0);
+          let cls='';
+          if(l===q.answer) cls='opt-correct';
+          else if(l===ua&&!ok) cls='opt-wrong';
+          return `<div class="review-opt ${cls}">${l===ua?'▶ ':''}${opt}</div>`;
         }).join('')}
       </div>
       <div class="review-explain">💡 ${q.explanation}</div>
@@ -565,28 +512,11 @@ function renderResults() {
       <div class="grade-circle ${gradeClass}">${grade}</div>
       <div class="score-big">${correct} / ${total}</div>
       <div class="pct-big">${pct}%</div>
-      <div class="estimated-score">
-        預估 TOEIC 分數：<strong>${estimatedScore}</strong> / 990
-      </div>
     </div>
-
-    <div class="tech-targets">
-      <h3>🏢 科技大廠標準對照</h3>
-      ${techTargets.map(t => `
-        <div class="target-row ${t.pass ? 'pass' : 'fail'}">
-          <span class="target-company">${t.company}</span>
-          <span class="target-score">${t.score}</span>
-          <span class="target-result">${t.pass ? '✓ 達標' : '✗ 未達'}</span>
-        </div>
-      `).join('')}
-    </div>
-
     <div class="results-actions">
-      <button class="btn-primary" data-action="retry-quiz">🔄 重新練習</button>
+      <button class="btn-primary" data-action="start-exam">🔄 重新測驗</button>
       <button class="btn-secondary" data-action="goto-home">🏠 回首頁</button>
-      <button class="btn-secondary" data-action="goto-progress">📊 查看進度</button>
     </div>
-
     <div class="review-section">
       <h3>📋 詳細解析</h3>
       ${reviewHtml}
@@ -594,157 +524,101 @@ function renderResults() {
   </div>`;
 }
 
-function renderVersus() {
-  const me = getCurrentUser();
-  const others = Object.keys(USERS).filter(u => u !== me);
-  if (others.length === 0) return '';
+// ── renderWrongReview ──────────────────────────────────────────────────────
+function renderWrongReview() {
+  const allQ = buildAllQuestions();
+  const wrongQs = [...state.wrong].map(id=>allQ.find(q=>q.id===id)).filter(Boolean);
 
-  const mySnap = { masteredCount: state.correct.size, attempts: Object.values(state.stats).reduce((s,v)=>s+(v.attempts||0),0), bestOverall: Object.values(state.stats).reduce((m,v)=>Math.max(m,v.best||0),0), history: state.history, stats: state.stats };
+  if (!wrongQs.length) {
+    return `<div class="wrong-review-view">
+      <button class="btn-back" data-action="goto-home">← 返回首頁</button>
+      <div class="empty-state">🎉 目前沒有錯題記錄！</div>
+    </div>`;
+  }
+
+  const items = wrongQs.map((q,i) => {
+    const qText = (q.text||q.question);
+    const preview = qText.length>60 ? qText.substring(0,60)+'…' : qText;
+    const psg = passageHtml(q);
+    return `<div class="wrong-item">
+      <div class="wrong-item-head" data-action="toggle-wrong" data-idx="${i}">
+        <div class="wrong-item-meta">
+          <span class="part-tag">${PART_LABELS[q.part]?.label}</span>
+          <span class="diff-tag ${q.difficulty}">${DIFFICULTY_LABELS[q.difficulty]?.label}</span>
+        </div>
+        <div class="wrong-item-preview">${preview}</div>
+        <span class="wrong-toggle" id="wtoggle-${i}">▼</span>
+      </div>
+      <div class="wrong-item-body" id="wbody-${i}" style="display:none">
+        ${psg ? `<div style="margin-bottom:12px">${psg}</div>` : ''}
+        <div class="wrong-full-q">${qText}</div>
+        <div class="wrong-options">
+          ${q.options.map(opt=>{
+            const isCorr = opt.charAt(0)===q.answer;
+            return `<div class="wrong-opt ${isCorr?'opt-correct':''}">${isCorr?'✓ ':''}${opt}</div>`;
+          }).join('')}
+        </div>
+        <div class="review-explain">💡 ${q.explanation}</div>
+      </div>
+    </div>`;
+  }).join('');
 
   return `
-  <div class="progress-section">
-    <h3 class="section-title">⚔️ 對手比較</h3>
-    ${others.map(rival => {
-      const rv = getAnyUserSnapshot(rival);
-      const parts = ['part5','part6','part7'];
-      const diffs = ['easy','medium','hard'];
-      const allKeys = parts.flatMap(p => diffs.map(d => `${p}_${d}`));
-
-      const myWins   = allKeys.filter(k => (mySnap.stats[k]?.best||0) > (rv.stats[k]?.best||0)).length;
-      const rivalWins= allKeys.filter(k => (rv.stats[k]?.best||0) > (mySnap.stats[k]?.best||0)).length;
-
-      const rivalRecent = rv.history.slice(0,3);
-      const myRecent    = mySnap.history.slice(0,3);
-
-      const statRow = (label, myVal, rvVal, higherIsBetter=true) => {
-        const myWin = higherIsBetter ? myVal > rvVal : myVal < rvVal;
-        const rvWin = higherIsBetter ? rvVal > myVal : rvVal < myVal;
-        return `<div class="versus-row">
-          <span class="vs-val ${myWin?'vs-win':rvWin?'vs-lose':''}">${myVal}</span>
-          <span class="vs-label">${label}</span>
-          <span class="vs-val ${rvWin?'vs-win':myWin?'vs-lose':''}">${rvVal}</span>
-        </div>`;
-      };
-
-      return `<div class="versus-card">
-        <div class="versus-header">
-          <div class="versus-player ${myWins>=rivalWins?'vs-leading':''}">
-            <div class="vs-name">👤 ${me}</div>
-            <div class="vs-tag">${myWins > rivalWins ? '領先中' : myWins === rivalWins ? '平手' : '落後中'}</div>
-          </div>
-          <div class="versus-vs">VS</div>
-          <div class="versus-player ${rivalWins>myWins?'vs-leading':''}">
-            <div class="vs-name">👤 ${rival}</div>
-            <div class="vs-tag">${rivalWins > myWins ? '領先中' : rivalWins === myWins ? '平手' : '落後中'}</div>
-          </div>
-        </div>
-        <div class="versus-stats">
-          ${statRow('已掌握題數', mySnap.masteredCount, rv.masteredCount)}
-          ${statRow('練習總次數', mySnap.attempts, rv.attempts)}
-          ${statRow('最高單次分數', mySnap.bestOverall + '%', rv.bestOverall + '%')}
-          ${statRow('各題型勝場', myWins, rivalWins)}
-        </div>
-        <div class="versus-recent">
-          <div class="vs-recent-col">
-            ${myRecent.length ? myRecent.map(h=>`<div class="vs-recent-item">
-              <span>${h.part==='all'?'完整':PART_LABELS[h.part]?.label||h.part} · ${DIFFICULTY_LABELS[h.difficulty]?.label?.split(' ')[0]||''}</span>
-              <span style="color:${h.pct>=80?'var(--green)':h.pct>=60?'var(--orange)':'var(--red)'};font-weight:700">${h.pct}%</span>
-            </div>`).join('') : '<div class="vs-recent-item" style="color:var(--text-muted)">尚無記錄</div>'}
-          </div>
-          <div class="vs-recent-divider"></div>
-          <div class="vs-recent-col">
-            ${rivalRecent.length ? rivalRecent.map(h=>`<div class="vs-recent-item">
-              <span>${h.part==='all'?'完整':PART_LABELS[h.part]?.label||h.part} · ${DIFFICULTY_LABELS[h.difficulty]?.label?.split(' ')[0]||''}</span>
-              <span style="color:${h.pct>=80?'var(--green)':h.pct>=60?'var(--orange)':'var(--red)'};font-weight:700">${h.pct}%</span>
-            </div>`).join('') : '<div class="vs-recent-item" style="color:var(--text-muted)">尚無記錄</div>'}
-          </div>
-        </div>
-      </div>`;
-    }).join('')}
+  <div class="wrong-review-view">
+    <button class="btn-back" data-action="goto-home">← 返回首頁</button>
+    <h2>❌ 我的錯題 (${wrongQs.length} 題)</h2>
+    <p class="wrong-hint">點擊題目展開查看正確答案與解釋</p>
+    <div class="wrong-list">${items}</div>
   </div>`;
 }
 
+// ── renderProgress ─────────────────────────────────────────────────────────
 function renderProgress() {
-  const entries = Object.entries(state.stats);
-
-  const historyHtml = state.history.length === 0
-    ? '<p class="no-data">尚無練習記錄，快去開始練習吧！</p>'
-    : `<div class="history-list">
-        ${state.history.map(h => {
-          const d = new Date(h.date);
-          const dateStr = `${d.getMonth()+1}/${d.getDate()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
-          const partLabel = h.part === 'all' ? '完整測驗' : (PART_LABELS[h.part]?.label || h.part);
-          const diffLabel = DIFFICULTY_LABELS[h.difficulty]?.label || h.difficulty;
-          const color = h.pct >= 80 ? 'var(--green)' : h.pct >= 60 ? 'var(--orange)' : 'var(--red)';
-          return `<div class="history-item">
-            <span class="history-date">${dateStr}</span>
-            <span class="history-part">${partLabel} · ${diffLabel}</span>
-            <span class="history-score" style="color:${color}">${h.pct}%</span>
-            <span class="history-toeic">~${h.estimatedToeic}分</span>
-          </div>`;
-        }).join('')}
-      </div>`;
+  const histHtml = state.history.length===0
+    ? '<p class="no-data">尚無練習記錄</p>'
+    : `<div class="history-list">${state.history.map(h=>{
+        const d=new Date(h.date);
+        const ds=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+        const c=h.pct>=80?'var(--green)':h.pct>=60?'var(--orange)':'var(--red)';
+        const label=h.type==='exam'?'完整測驗':h.type==='practice'?'練習模式':(PART_LABELS[h.part]?.label||'練習');
+        return `<div class="history-item">
+          <span class="history-date">${ds}</span>
+          <span class="history-part">${label} · ${h.correct||0}/${h.total||0}</span>
+          <span class="history-score" style="color:${c}">${h.pct}%</span>
+        </div>`;
+      }).join('')}</div>`;
 
   return `
   <div class="progress-view">
     <button class="btn-back" data-action="goto-home">← 返回首頁</button>
     <h2>📊 ${getCurrentUser()} 的學習進度</h2>
-    <div class="mastery-bar">
-      <span class="mastery-label">已掌握題數</span>
-      <span class="mastery-count">${state.correct.size} 題</span>
-      <span class="mastery-note">（答對即記錄，答錯即移除）</span>
-    </div>
-    ${renderVersus()}
 
-    <div class="progress-section">
-      <h3 class="section-title">📅 練習歷史紀錄</h3>
-      ${historyHtml}
-    </div>
-
-    ${entries.length > 0 ? `
-    <div class="progress-section">
-      <h3 class="section-title">🏆 各題型最佳成績</h3>
-      <div class="progress-table">
-        <div class="table-header">
-          <span>題型 / 難度</span>
-          <span>練習次數</span>
-          <span>最佳成績</span>
-          <span>最近成績</span>
-        </div>
-        ${entries.map(([key, v]) => {
-          const [part, diff] = key.split('_');
-          const pLabel = PART_LABELS[part]?.label || part;
-          const dLabel = DIFFICULTY_LABELS[diff]?.label || diff;
-          return `<div class="table-row">
-            <span>${pLabel} ${dLabel}</span>
-            <span>${v.attempts || 0} 次</span>
-            <span class="score-cell">${v.best || 0}%</span>
-            <span class="score-cell">${v.last || 0}%</span>
-          </div>`;
-        }).join('')}
+    <div class="mastery-row">
+      <div class="mastery-card" style="border-color:var(--green)">
+        <span class="mastery-num" style="color:var(--green)">${state.correct.size}</span>
+        <span class="mastery-lbl">已掌握</span>
+      </div>
+      <div class="mastery-card" style="border-color:var(--red)">
+        <span class="mastery-num" style="color:var(--red)">${state.wrong.size}</span>
+        <span class="mastery-lbl">需複習</span>
+      </div>
+      <div class="mastery-card" style="border-color:var(--navy)">
+        <span class="mastery-num">${Object.values(state.stats).reduce((s,v)=>s+(v.attempts||0),0)}</span>
+        <span class="mastery-lbl">總練習次數</span>
       </div>
     </div>
-    ` : ''}
+
+    <div class="progress-section">
+      <h3 class="section-title">📅 練習歷史</h3>
+      ${histHtml}
+    </div>
 
     <div class="progress-tips">
       <h3>📚 學習建議</h3>
       <div class="tips-grid">
-        <div class="tip-card">
-          <strong>Part 5 技巧</strong>
-          <p>先掌握詞性判斷：看空格前後，判斷需要名詞/動詞/形容詞/副詞，再從選項中篩選。</p>
-        </div>
-        <div class="tip-card">
-          <strong>Part 6 技巧</strong>
-          <p>先讀完整段落再填空，注意上下文語氣和時態是否一致。</p>
-        </div>
-        <div class="tip-card">
-          <strong>Part 7 技巧</strong>
-          <p>先看題目再讀文章，用「關鍵字定位法」找到相關段落，不需逐字閱讀。</p>
-        </div>
-        <div class="tip-card">
-          <strong>時間管理</strong>
-          <p>Part 5: 每題 30 秒 · Part 6: 每題 45 秒 · Part 7: 每題 60-75 秒</p>
-        </div>
+        <div class="tip-card"><strong>Part 5</strong><p>先判斷詞性，再看時態與語態，最後排除干擾選項。</p></div>
+        <div class="tip-card"><strong>Part 6</strong><p>先讀完整段落，掌握語氣與時態後再填空。</p></div>
+        <div class="tip-card"><strong>Part 7</strong><p>先看題目，再用關鍵字定位文章段落，不必逐字讀。</p></div>
       </div>
     </div>
 
@@ -752,243 +626,210 @@ function renderProgress() {
   </div>`;
 }
 
-// ── Event Handling ─────────────────────────────────────────────────────────
+// ── Events ─────────────────────────────────────────────────────────────────
 function attachEvents() {
-  document.querySelectorAll('[data-action]').forEach(el => {
-    el.addEventListener('click', handleAction);
-  });
-
-  // Enter key on login password field
-  const pwdInput = document.getElementById('login-password');
-  if (pwdInput) {
-    pwdInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') submitLogin();
-    });
-    pwdInput.focus();
-  }
-  const userInput = document.getElementById('login-username');
-  if (userInput) {
-    userInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') document.getElementById('login-password')?.focus();
-    });
-  }
+  document.querySelectorAll('[data-action]').forEach(el => el.addEventListener('click', handleAction));
+  const pwd = document.getElementById('login-password');
+  if (pwd) { pwd.addEventListener('keydown', e=>{ if(e.key==='Enter') submitLogin(); }); pwd.focus(); }
+  const usr = document.getElementById('login-username');
+  if (usr) usr.addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('login-password')?.focus(); });
 }
 
 function submitLogin() {
-  const username = document.getElementById('login-username')?.value.trim() || '';
-  const password = document.getElementById('login-password')?.value || '';
-  if (doLogin(username, password)) {
-    state.stats = loadStats();
-    state.history = loadHistory();
-    state.correct = loadCorrect();
-    state.view = 'home';
-    render();
+  const u = document.getElementById('login-username')?.value.trim()||'';
+  const p = document.getElementById('login-password')?.value||'';
+  if (doLogin(u,p)) {
+    state.stats=loadStats(); state.history=loadHistory(); state.correct=loadCorrect(); state.wrong=loadWrong();
+    state.view='home'; render();
   } else {
-    const err = document.getElementById('login-error');
-    if (err) err.style.display = 'block';
+    const err=document.getElementById('login-error'); if(err) err.style.display='block';
   }
 }
 
 function handleAction(e) {
-  const { action, value, part, index, qid } = e.currentTarget.dataset;
+  const el = e.currentTarget;
+  const { action, value, qid, index, idx } = el.dataset;
 
   switch (action) {
-    case 'do-login':
-      submitLogin();
+    case 'do-login': submitLogin(); break;
+    case 'logout': if(confirm('確定要登出嗎？')) doLogout(); break;
+    case 'goto-home': state.view='home'; render(); break;
+    case 'goto-progress': state.view='progress'; render(); break;
+    case 'goto-wrong-review': state.view='wrong-review'; render(); break;
+
+    case 'start-practice': startPractice(false); break;
+    case 'resume-practice': startPractice(true); break;
+    case 'discard-practice':
+      if(confirm('確定放棄未完成的練習？')) { clearPracticeSession(); render(); }
       break;
 
-    case 'resume-quiz': {
-      const session = loadQuizSession();
-      if (!session) break;
-      state.selectedPart = session.selectedPart;
-      state.selectedDifficulty = session.selectedDifficulty;
-      const allQ = buildQuestions(session.selectedPart, session.selectedDifficulty);
-      const qMap = Object.fromEntries(allQ.map(q => [q.id, q]));
-      state.questions = session.questionIds.map(id => qMap[id]).filter(Boolean);
-      state.answers = session.answers || {};
-      state.currentIndex = Math.min(session.currentIndex || 0, state.questions.length - 1);
-      stopTimer();
-      state.view = 'quiz';
+    case 'start-exam': startExam(false); break;
+    case 'resume-exam': startExam(true); break;
+    case 'discard-exam':
+      if(confirm('確定放棄未完成的測驗？')) { clearExamSession(); render(); }
+      break;
+
+    case 'practice-answer': {
+      if (state.showResult) break;
+      const q = state.questions[state.currentIndex];
+      state.answers[qid] = value;
+      if (value===q.answer) { state.correct.add(q.id); state.wrong.delete(q.id); }
+      else { state.wrong.add(q.id); state.correct.delete(q.id); }
+      saveCorrect(); saveWrong();
+      state.showResult = true;
       render();
-      startTimer(session.timeRemaining || 60);
       break;
     }
 
-    case 'discard-session':
-      if (confirm('確定要放棄這次練習紀錄嗎？')) {
-        clearQuizSession();
-        render();
-      }
+    case 'practice-next': {
+      const isLast = state.currentIndex >= state.questions.length-1;
+      if (isLast) { finishPractice(); }
+      else { state.currentIndex++; state.showResult=false; savePracticeSession(); render(); window.scrollTo(0,0); }
+      break;
+    }
+
+    case 'practice-exit':
+      savePracticeSession(); state.view='home'; render();
       break;
 
-    case 'logout':
-      if (confirm('確定要登出嗎？')) doLogout();
+    case 'exam-answer':
+      state.answers[qid]=value; saveExamSession(); render();
       break;
 
-    case 'goto-home':
-      if (state.view === 'quiz') saveQuizSession();
-      stopTimer();
-      state.view = 'home';
-      render();
+    case 'exam-prev':
+      if(state.currentIndex>0){state.currentIndex--;render();window.scrollTo(0,0);}
       break;
 
-    case 'goto-select':
-      state.selectedPart = part || null;
-      state.selectedDifficulty = null;
-      state.view = 'select';
-      render();
+    case 'exam-next':
+      if(state.currentIndex<state.questions.length-1){state.currentIndex++;render();window.scrollTo(0,0);}
+      else finishExam();
       break;
 
-    case 'goto-progress':
-      state.view = 'progress';
-      render();
+    case 'exam-jump':
+      state.currentIndex=parseInt(index);render();window.scrollTo(0,0);
       break;
 
-    case 'select-part':
-      state.selectedPart = value;
-      render();
+    case 'exam-exit':
+      saveExamSession(); state.view='home'; render();
       break;
 
-    case 'select-difficulty':
-      state.selectedDifficulty = value;
-      startQuiz();
+    case 'finish-exam': {
+      const ans = Object.keys(state.answers).length;
+      if(confirm(`已作答 ${ans}/${state.questions.length} 題，確定提交？`)) finishExam();
       break;
+    }
 
-    case 'select-answer':
-      state.answers[qid] = value;
-      saveQuizSession();
-      render();
-      if (state.currentIndex < state.questions.length - 1) {
-        setTimeout(() => {
-          state.currentIndex++;
-          render();
-        }, 350);
-      }
+    case 'toggle-wrong': {
+      const body = document.getElementById(`wbody-${idx}`);
+      const tog  = document.getElementById(`wtoggle-${idx}`);
+      if (body) { const open=body.style.display!=='none'; body.style.display=open?'none':'block'; if(tog) tog.textContent=open?'▼':'▲'; }
       break;
-
-    case 'prev-question':
-      if (state.currentIndex > 0) { state.currentIndex--; render(); }
-      break;
-
-    case 'next-question':
-      if (state.currentIndex < state.questions.length - 1) {
-        state.currentIndex++;
-        render();
-      } else {
-        finishQuiz();
-      }
-      break;
-
-    case 'jump-question':
-      state.currentIndex = parseInt(index);
-      render();
-      break;
-
-    case 'finish-quiz':
-      finishQuiz();
-      break;
-
-    case 'retry-quiz':
-      startQuiz();
-      break;
+    }
 
     case 'clear-stats':
-      if (confirm('確定要清除所有練習記錄嗎？')) {
-        state.stats = {};
-        state.history = [];
-        state.correct = new Set();
-        saveStats();
-        saveHistory();
-        saveCorrect();
-        clearQuizSession();
+      if(confirm('確定清除所有記錄？此操作無法復原。')) {
+        state.stats={}; state.history=[]; state.correct=new Set(); state.wrong=new Set();
+        saveStats(); saveHistory(); saveCorrect(); saveWrong();
+        clearPracticeSession(); clearExamSession();
         render();
       }
       break;
   }
 }
 
-function startQuiz() {
-  const part = state.selectedPart;
-  const diff = state.selectedDifficulty;
-  state.questions = prioritize(buildQuestions(part, diff));
-  state.currentIndex = 0;
+// ── Game Logic ─────────────────────────────────────────────────────────────
+function startPractice(resume) {
+  state.showResult = false;
   state.answers = {};
-  state.startTime = Date.now();
-
-  const timeLimits = { part5: 15, part6: 12, part7: 20, all: 18 };
-  const timePerQ = timeLimits[part] || 15;
-  const totalTime = state.questions.length * timePerQ;
-
-  stopTimer();
-  state.view = 'quiz';
-  render();
-  startTimer(totalTime);
+  if (resume) {
+    const sess = loadPracticeSession();
+    if (sess) {
+      const qMap = Object.fromEntries(buildAllQuestions().map(q=>[q.id,q]));
+      state.questions = (sess.questionIds||[]).map(id=>qMap[id]).filter(Boolean);
+      state.currentIndex = Math.min(sess.currentIndex||0, state.questions.length-1);
+      state.view='practice'; render(); return;
+    }
+  }
+  state.questions = prioritize(buildAllQuestions());
+  state.currentIndex = 0;
+  savePracticeSession();
+  state.view='practice'; render(); window.scrollTo(0,0);
 }
 
-function finishQuiz() {
-  stopTimer();
-  const { correct, total, pct } = calculateScore();
-  const key = `${state.selectedPart || 'all'}_${state.selectedDifficulty}`;
-  const estimatedToeic = estimateToeicScore(pct, state.selectedDifficulty);
-
-  // Update summary stats
-  if (!state.stats[key]) state.stats[key] = { attempts: 0, best: 0, last: 0 };
-  state.stats[key].attempts++;
-  state.stats[key].last = pct;
-  if (pct > state.stats[key].best) state.stats[key].best = pct;
-  saveStats();
-
-  // Save to history (newest first, cap at 200 entries)
-  state.history.unshift({
-    date: new Date().toISOString(),
-    part: state.selectedPart || 'all',
-    difficulty: state.selectedDifficulty,
-    correct,
-    total,
-    pct,
-    estimatedToeic
+function finishPractice() {
+  clearPracticeSession();
+  let correct=0, total=0;
+  Object.entries(state.answers).forEach(([id,ans]) => {
+    const q = state.questions.find(q=>q.id===id);
+    if (q) { total++; if(ans===q.answer) correct++; }
   });
-  if (state.history.length > 200) state.history.pop();
+  const pct = total>0 ? Math.round((correct/total)*100) : 0;
+  state.history.unshift({ date:new Date().toISOString(), type:'practice', correct, total, pct });
+  if (state.history.length>200) state.history.pop();
   saveHistory();
+  state.view='home'; render(); window.scrollTo(0,0);
+}
 
-  clearQuizSession();
+function startExam(resume) {
+  state.answers = {};
+  if (resume) {
+    const sess = loadExamSession();
+    if (sess) {
+      const qMap = Object.fromEntries(buildAllQuestions().map(q=>[q.id,q]));
+      state.questions = (sess.questionIds||[]).map(id=>qMap[id]).filter(Boolean);
+      state.answers = sess.answers||{};
+      state.currentIndex = Math.min(sess.currentIndex||0, state.questions.length-1);
+      state.view='exam'; render(); return;
+    }
+  }
+  state.questions = prioritize(buildAllQuestions());
+  state.currentIndex = 0;
+  saveExamSession();
+  state.view='exam'; render(); window.scrollTo(0,0);
+}
 
-  // 更新已掌握題目：答對加入、答錯移除
+function finishExam() {
+  clearExamSession();
+  let correct=0;
   state.questions.forEach(q => {
-    if (state.answers[q.id] === q.answer) state.correct.add(q.id);
-    else state.correct.delete(q.id);
+    const ua = state.answers[q.id];
+    if (ua===q.answer){ correct++; state.correct.add(q.id); state.wrong.delete(q.id); }
+    else if (ua){ state.wrong.add(q.id); state.correct.delete(q.id); }
   });
-  saveCorrect();
-
-  state.view = 'results';
-  render();
-  window.scrollTo(0, 0);
+  saveCorrect(); saveWrong();
+  const total=state.questions.length, pct=total>0?Math.round((correct/total)*100):0;
+  state.history.unshift({ date:new Date().toISOString(), type:'exam', correct, total, pct });
+  if(state.history.length>200) state.history.pop();
+  saveHistory();
+  if(!state.stats['exam']) state.stats['exam']={attempts:0,best:0,last:0};
+  state.stats['exam'].attempts++; state.stats['exam'].last=pct;
+  if(pct>state.stats['exam'].best) state.stats['exam'].best=pct;
+  saveStats();
+  state.view='exam-results'; render(); window.scrollTo(0,0);
 }
 
 // ── Version Check ──────────────────────────────────────────────────────────
 function checkVersion() {
-  fetch('version.json?t=' + Date.now())
-    .then(r => r.json())
-    .then(({ v }) => {
-      const stored = localStorage.getItem('toeic_app_version');
-      if (stored && stored !== v) {
-        const banner = document.createElement('div');
-        banner.className = 'update-banner';
-        banner.innerHTML = `🆕 網站有新版本，建議更新以取得最新題目與功能。<button onclick="localStorage.setItem('toeic_app_version','${v}');location.reload(true)">立即更新</button>`;
-        document.body.prepend(banner);
+  fetch('version.json?t='+Date.now())
+    .then(r=>r.json())
+    .then(({v})=>{
+      const stored=localStorage.getItem('toeic_app_version');
+      if(stored&&stored!==v){
+        const b=document.createElement('div');
+        b.className='update-banner';
+        b.innerHTML=`🆕 網站有新版本，建議更新以取得最新題目。<button onclick="localStorage.setItem('toeic_app_version','${v}');location.reload(true)">立即更新</button>`;
+        document.body.prepend(b);
       }
-      localStorage.setItem('toeic_app_version', v);
-    })
-    .catch(() => {});
+      localStorage.setItem('toeic_app_version',v);
+    }).catch(()=>{});
 }
 
 // ── Boot ───────────────────────────────────────────────────────────────────
 const bootUser = getCurrentUser();
 if (bootUser) {
-  state.stats = loadStats();
-  state.history = loadHistory();
-  state.correct = loadCorrect();
-  state.view = 'home';
+  state.stats=loadStats(); state.history=loadHistory();
+  state.correct=loadCorrect(); state.wrong=loadWrong();
+  state.view='home';
 }
 render();
 checkVersion();

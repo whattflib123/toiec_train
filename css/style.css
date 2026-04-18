@@ -835,7 +835,7 @@ pre { white-space: pre-wrap; word-wrap: break-word; font-family: inherit; }
 }
 .history-item {
   display: grid;
-  grid-template-columns: 80px 1fr 60px 70px;
+  grid-template-columns: 80px 1fr 60px;
   gap: 8px;
   align-items: center;
   padding: 12px 20px;
@@ -850,21 +850,210 @@ pre { white-space: pre-wrap; word-wrap: break-word; font-family: inherit; }
 .history-score { font-weight: 800; font-size: 15px; text-align: right; }
 .history-toeic { font-size: 12px; color: var(--text-muted); text-align: right; }
 
+/* ── iPhone / Mobile Base ───────────────────────────────────────────── */
+* { -webkit-tap-highlight-color: transparent; }
+body { -webkit-text-size-adjust: 100%; }
+input, select, textarea { font-size: 16px !important; } /* prevent iOS zoom */
+button { touch-action: manipulation; min-height: 44px; }
+#app { padding-bottom: max(60px, env(safe-area-inset-bottom)); }
+
+/* ── Tags ───────────────────────────────────────────────────────────── */
+.part-tag {
+  font-size: 11px; font-weight: 700; padding: 3px 8px;
+  background: rgba(26,39,68,0.1); color: var(--navy);
+  border-radius: 6px; white-space: nowrap;
+}
+.diff-tag {
+  font-size: 11px; font-weight: 700; padding: 3px 8px;
+  border-radius: 6px; white-space: nowrap;
+}
+.diff-tag.easy   { background: rgba(39,174,96,0.15);  color: #1a7a44; }
+.diff-tag.medium { background: rgba(243,156,18,0.15); color: #a06500; }
+.diff-tag.hard   { background: rgba(231,76,60,0.15);  color: #b02020; }
+
+/* ── Home Actions ───────────────────────────────────────────────────── */
+.home-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.btn-action {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--card); border-radius: var(--radius);
+  padding: 16px 18px; box-shadow: var(--shadow);
+  border: 2px solid transparent; text-align: left;
+  transition: all 0.15s; width: 100%;
+}
+.btn-action:active { transform: scale(0.98); }
+.action-icon { font-size: 26px; flex-shrink: 0; }
+.action-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.action-title { font-size: 16px; font-weight: 800; color: var(--navy); }
+.action-desc  { font-size: 12px; color: var(--text-muted); }
+.action-arrow { font-size: 22px; color: var(--text-muted); font-weight: 300; }
+.btn-action-practice { border-color: var(--navy); }
+.btn-action-practice .action-title { color: var(--navy); }
+.btn-action-exam { border-color: var(--gold); }
+.btn-action-exam .action-title { color: #9a6800; }
+.btn-action-wrong { border-color: var(--red); }
+.btn-action-wrong .action-title { color: var(--red); }
+
+/* ── Versus Card (new layout) ───────────────────────────────────────── */
+.versus-card {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); overflow: hidden; margin-bottom: 16px;
+}
+.versus-head {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  padding: 14px 16px;
+}
+.vs-player { text-align: center; }
+.vs-player.leading .vs-name { color: var(--gold); }
+.vs-name { font-size: 14px; font-weight: 800; color: #fff; }
+.vs-status { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; font-weight: 600; }
+.vs-player.leading .vs-status { color: var(--gold-light); }
+.vs-vs { font-size: 16px; font-weight: 900; color: rgba(255,255,255,0.35); letter-spacing: 2px; }
+.vs-stats { padding: 4px 16px; }
+.vs-row {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center; gap: 8px; padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+}
+.vs-row:last-child { border-bottom: none; }
+.vs-val { font-weight: 800; font-size: 15px; color: var(--text-muted); text-align: center; }
+.vs-val.win  { color: var(--green); }
+.vs-val.lose { color: var(--red); }
+.vs-lbl { font-size: 11px; color: var(--text-muted); text-align: center; white-space: nowrap; }
+.vs-recent {
+  display: grid; grid-template-columns: 1fr 1px 1fr;
+  background: var(--bg); padding: 10px 16px; gap: 12px;
+}
+.vs-recent-col { display: flex; flex-direction: column; gap: 5px; }
+.vs-recent-item { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); }
+.vs-divider { background: var(--border); }
+
+/* ── Practice View ──────────────────────────────────────────────────── */
+.practice-view { display: flex; flex-direction: column; min-height: 100vh; }
+.practice-header {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--navy); color: white;
+  padding: 12px 16px; border-radius: var(--radius);
+  margin-bottom: 12px; position: sticky; top: 8px; z-index: 10;
+  box-shadow: 0 4px 16px rgba(26,39,68,0.2);
+}
+.btn-back-sm {
+  background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.9);
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; border: 1.5px solid rgba(255,255,255,0.2);
+  white-space: nowrap; min-height: 36px;
+}
+.practice-meta { display: flex; gap: 6px; align-items: center; flex: 1; }
+.practice-meta .part-tag { background: rgba(255,255,255,0.15); color: #fff; }
+.practice-meta .diff-tag.easy   { background: rgba(39,174,96,0.3);  color: #4ade80; }
+.practice-meta .diff-tag.medium { background: rgba(243,156,18,0.3); color: #fbbf24; }
+.practice-meta .diff-tag.hard   { background: rgba(231,76,60,0.3);  color: #f87171; }
+.practice-counter { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.8); white-space: nowrap; }
+
+.practice-body { display: flex; flex-direction: column; gap: 14px; flex: 1; }
+
+/* Option states in practice mode */
+.opt-correct-show {
+  border-color: var(--green) !important; background: #d1fae5 !important;
+  color: #065f46 !important; font-weight: 700 !important;
+}
+.opt-wrong-show {
+  border-color: var(--red) !important; background: #fee2e2 !important;
+  color: #991b1b !important; font-weight: 700 !important;
+}
+.opt-dim { opacity: 0.45; }
+
+/* Practice result panel */
+.practice-result {
+  border-radius: var(--radius); padding: 18px 20px;
+  box-shadow: var(--shadow); margin-top: 4px;
+}
+.result-correct { background: #f0fdf4; border: 2px solid var(--green); }
+.result-wrong   { background: #fef2f2; border: 2px solid var(--red); }
+.result-badge {
+  font-size: 17px; font-weight: 800; margin-bottom: 8px;
+}
+.result-correct .result-badge { color: var(--green); }
+.result-wrong   .result-badge { color: var(--red); }
+.result-correct-ans {
+  font-size: 14px; font-weight: 700; color: var(--navy);
+  margin-bottom: 10px;
+}
+.result-explain {
+  font-size: 14px; color: #444; line-height: 1.7;
+  padding: 10px 12px; background: #fffbeb;
+  border-radius: var(--radius-sm); border-left: 3px solid var(--gold);
+  margin-bottom: 14px;
+}
+.btn-next-q {
+  width: 100%; padding: 14px; border-radius: var(--radius-sm);
+  background: var(--navy); color: white;
+  font-size: 16px; font-weight: 800;
+  transition: background 0.2s;
+}
+.btn-next-q:active { background: var(--navy-light); }
+
+/* ── Wrong Review ───────────────────────────────────────────────────── */
+.wrong-review-view h2 { font-size: 20px; margin-bottom: 6px; }
+.wrong-hint { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+.wrong-list { display: flex; flex-direction: column; gap: 10px; }
+.wrong-item {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); overflow: hidden;
+  border-left: 4px solid var(--red);
+}
+.wrong-item-head {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 14px 16px; cursor: pointer;
+}
+.wrong-item-meta { display: flex; gap: 6px; flex-shrink: 0; margin-top: 1px; }
+.wrong-item-preview { flex: 1; font-size: 14px; color: var(--text); line-height: 1.5; }
+.wrong-toggle { font-size: 12px; color: var(--text-muted); flex-shrink: 0; margin-top: 2px; }
+.wrong-item-body { padding: 0 16px 16px; }
+.wrong-full-q { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 12px; line-height: 1.6; }
+.wrong-options { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.wrong-opt {
+  font-size: 14px; padding: 8px 12px;
+  background: var(--bg); border-radius: var(--radius-sm);
+  color: var(--text);
+}
+.wrong-opt.opt-correct { background: #d1fae5; color: #065f46; font-weight: 700; }
+
+/* ── Mastery Row ────────────────────────────────────────────────────── */
+.mastery-row { display: flex; gap: 10px; margin-bottom: 20px; }
+.mastery-card {
+  flex: 1; background: var(--card); border-radius: var(--radius-sm);
+  padding: 14px 12px; text-align: center; box-shadow: var(--shadow);
+  border: 2px solid var(--border); display: flex; flex-direction: column; gap: 4px;
+}
+.mastery-num { font-size: 26px; font-weight: 900; }
+.mastery-lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+
+/* ── Empty State ────────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  font-size: 18px; font-weight: 700; color: var(--text-muted);
+}
+
+/* ── Dots more indicator ────────────────────────────────────────────── */
+.dots-more { font-size: 11px; color: var(--text-muted); align-self: center; }
+
 /* ── Responsive ─────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
-  #app { padding: 12px 10px 60px; }
-  .hero h1 { font-size: 22px; }
+  #app { padding: 10px 12px max(60px, env(safe-area-inset-bottom)); }
   .stats-bar { gap: 8px; }
   .stat-num { font-size: 22px; }
-  .difficulty-grid { flex-direction: column; }
-  .diff-card { min-width: unset; }
   .results-actions { flex-direction: column; }
-  .table-header, .table-row { grid-template-columns: 2fr 1fr 1fr 1fr; font-size: 12px; padding: 10px 12px; }
-  .quiz-footer { padding: 12px; }
-  .question-dots { max-height: 48px; }
+  .quiz-footer { padding: 10px 12px; }
+  .question-dots { max-height: 44px; }
   .tips-grid { flex-direction: column; }
-  .info-grid { flex-direction: column; }
-  .btn-nav { padding: 8px 14px; font-size: 13px; }
-  .login-card { padding: 36px 24px; }
-  .history-item { grid-template-columns: 70px 1fr 52px 60px; padding: 10px 14px; font-size: 13px; }
+  .btn-nav { padding: 10px 12px; font-size: 13px; }
+  .login-card { padding: 36px 20px; }
+  .history-item { grid-template-columns: 70px 1fr 52px; padding: 10px 14px; font-size: 13px; }
+  .versus-head { padding: 12px; }
+  .vs-name { font-size: 13px; }
+  .practice-header { padding: 10px 12px; }
+  .mastery-row { gap: 8px; }
+  .mastery-num { font-size: 22px; }
 }
