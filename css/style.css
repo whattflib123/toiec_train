@@ -203,6 +203,32 @@ pre { white-space: pre-wrap; word-wrap: break-word; font-family: inherit; }
 .info-card span { font-size: 12px; color: var(--text-muted); }
 .info-card span:nth-child(2) { font-weight: 600; color: var(--text); font-size: 13px; }
 
+/* ── Site Intro ─────────────────────────────────────────────────────── */
+.site-intro {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.site-intro h3 { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+.site-intro > p { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 18px; }
+.site-intro strong { color: var(--navy); }
+
+.intro-grid { display: flex; flex-direction: column; gap: 12px; }
+.intro-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+.intro-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+.intro-item div { display: flex; flex-direction: column; gap: 3px; }
+.intro-item strong { font-size: 14px; color: var(--navy); }
+.intro-item span { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
 /* ── Select View ────────────────────────────────────────────────────── */
 .select-view h2 { font-size: 22px; margin-bottom: 20px; }
 .select-hint { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; }

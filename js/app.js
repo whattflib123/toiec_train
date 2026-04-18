@@ -283,8 +283,43 @@ function renderHome() {
       </button>
     </div>
 
+    <div class="site-intro">
+      <h3>這是什麼網站？</h3>
+      <p>本平台是一個專為備考 TOEIC 閱讀測驗設計的練習網站，題目涵蓋 Part 5、Part 6、Part 7 三大題型，共 <strong>${totalQ} 題</strong>，分為初級、中級、高級三個難度，目標是幫助你達到科技大廠的英文門檻（700–800+ 分）。</p>
+      <div class="intro-grid">
+        <div class="intro-item">
+          <div class="intro-icon">✏️</div>
+          <div>
+            <strong>Part 5 — 文法選填</strong>
+            <span>${['easy','medium','hard'].reduce((s,d)=>s+QUESTION_BANK.part5[d].length,0)} 題｜單句填空，測驗詞性、時態、介系詞等文法概念</span>
+          </div>
+        </div>
+        <div class="intro-item">
+          <div class="intro-icon">📝</div>
+          <div>
+            <strong>Part 6 — 段落選填</strong>
+            <span>${['easy','medium','hard'].reduce((s,d)=>s+QUESTION_BANK.part6[d].reduce((x,g)=>x+g.questions.length,0),0)} 題｜閱讀完整短文後填入最適合的選項，測驗語境理解</span>
+          </div>
+        </div>
+        <div class="intro-item">
+          <div class="intro-icon">📖</div>
+          <div>
+            <strong>Part 7 — 閱讀理解</strong>
+            <span>${['easy','medium','hard'].reduce((s,d)=>s+QUESTION_BANK.part7[d].reduce((x,g)=>x+g.questions.length,0),0)} 題｜單篇、雙篇、三篇閱讀，涵蓋商業信件、公告、報告等題材</span>
+          </div>
+        </div>
+        <div class="intro-item">
+          <div class="intro-icon">🧠</div>
+          <div>
+            <strong>智慧出題系統</strong>
+            <span>每次隨機排列 · 答對的題目自動降低出現頻率 · 幫你集中火力攻克弱點</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="toeic-info">
-      <h3>📌 TOEIC 考試結構說明</h3>
+      <h3>📌 TOEIC 正式考試結構</h3>
       <div class="info-grid">
         <div class="info-card">
           <strong>Part 5</strong>
