@@ -3,17 +3,7 @@
 // ── Constants ──────────────────────────────────────────────────────────────
 const USERS = { 'pyc': 'pyc0321', 'felix': 'felix' };
 
-const PART_LABELS = {
-  part5: { label: 'Part 5', name: '文法選填', icon: '✏️', description: '單句填空，測驗詞性、時態、介系詞' },
-  part6: { label: 'Part 6', name: '段落選填', icon: '📝', description: '段落填空，測驗語境理解與文法' },
-  part7: { label: 'Part 7', name: '閱讀理解', icon: '📖', description: '單篇、雙篇、三篇閱讀理解' },
-};
-
-const DIFFICULTY_LABELS = {
-  easy:   { label: '初級', color: '#27ae60' },
-  medium: { label: '中級', color: '#f39c12' },
-  hard:   { label: '高級', color: '#e74c3c' },
-};
+// PART_LABELS and DIFFICULTY_LABELS are defined in questions.js
 
 // ── Auth ───────────────────────────────────────────────────────────────────
 function getCurrentUser() { return sessionStorage.getItem('toeic_user'); }
