@@ -47,6 +47,29 @@ function saveHistory() {
   localStorage.setItem(`toeic_history_${u}`, JSON.stringify(state.history));
 }
 
+function saveQuizSession() {
+  const u = getCurrentUser(); if (!u) return;
+  localStorage.setItem(`toeic_session_${u}`, JSON.stringify({
+    questionIds: state.questions.map(q => q.id),
+    answers: state.answers,
+    currentIndex: state.currentIndex,
+    selectedPart: state.selectedPart,
+    selectedDifficulty: state.selectedDifficulty,
+    timeRemaining: state.timeRemaining,
+    savedAt: new Date().toISOString()
+  }));
+}
+
+function loadQuizSession() {
+  const u = getCurrentUser(); if (!u) return null;
+  try { return JSON.parse(localStorage.getItem(`toeic_session_${u}`)); } catch { return null; }
+}
+
+function clearQuizSession() {
+  const u = getCurrentUser(); if (!u) return;
+  localStorage.removeItem(`toeic_session_${u}`);
+}
+
 function loadCorrect() {
   const u = getCurrentUser(); if (!u) return new Set();
   try { return new Set(JSON.parse(localStorage.getItem(`toeic_correct_${u}`) || '[]')); } catch { return new Set(); }
@@ -261,6 +284,27 @@ function renderHome() {
       </div>
     </div>
 
+    ${(() => {
+      const session = loadQuizSession();
+      if (!session) return '';
+      const partLabel = session.selectedPart === 'all' ? '完整測驗' : (PART_LABELS[session.selectedPart]?.label || session.selectedPart);
+      const diffLabel = DIFFICULTY_LABELS[session.selectedDifficulty]?.label || session.selectedDifficulty;
+      const answered = Object.keys(session.answers || {}).length;
+      const total = (session.questionIds || []).length;
+      const d = new Date(session.savedAt);
+      const dateStr = `${d.getMonth()+1}/${d.getDate()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+      return `<div class="resume-banner">
+        <div class="resume-info">
+          <div class="resume-title">📌 有未完成的練習</div>
+          <div class="resume-detail">${partLabel} · ${diffLabel} — 已作答 ${answered} / ${total} 題 · 儲存於 ${dateStr}</div>
+        </div>
+        <div class="resume-actions">
+          <button class="btn-resume" data-action="resume-quiz">繼續作答</button>
+          <button class="btn-discard" data-action="discard-session">放棄</button>
+        </div>
+      </div>`;
+    })()}
+
     ${totalAttempts > 0 ? `<div class="best-scores">${bestScores}</div>` : ''}
 
     <div class="part-grid">
@@ -427,6 +471,7 @@ function renderQuiz() {
         <span class="difficulty-tag ${q.difficulty}">${DIFFICULTY_LABELS[q.difficulty]?.label}</span>
       </div>
       <div id="timer-display" class="timer-display">--:--</div>
+      <button class="btn-save-exit" data-action="goto-home">💾 暫存離開</button>
       <button class="btn-finish-early" data-action="finish-quiz">提交作答</button>
     </div>
 
@@ -752,11 +797,36 @@ function handleAction(e) {
       submitLogin();
       break;
 
+    case 'resume-quiz': {
+      const session = loadQuizSession();
+      if (!session) break;
+      state.selectedPart = session.selectedPart;
+      state.selectedDifficulty = session.selectedDifficulty;
+      const allQ = buildQuestions(session.selectedPart, session.selectedDifficulty);
+      const qMap = Object.fromEntries(allQ.map(q => [q.id, q]));
+      state.questions = session.questionIds.map(id => qMap[id]).filter(Boolean);
+      state.answers = session.answers || {};
+      state.currentIndex = Math.min(session.currentIndex || 0, state.questions.length - 1);
+      stopTimer();
+      state.view = 'quiz';
+      render();
+      startTimer(session.timeRemaining || 60);
+      break;
+    }
+
+    case 'discard-session':
+      if (confirm('確定要放棄這次練習紀錄嗎？')) {
+        clearQuizSession();
+        render();
+      }
+      break;
+
     case 'logout':
       if (confirm('確定要登出嗎？')) doLogout();
       break;
 
     case 'goto-home':
+      if (state.view === 'quiz') saveQuizSession();
       stopTimer();
       state.view = 'home';
       render();
@@ -786,6 +856,7 @@ function handleAction(e) {
 
     case 'select-answer':
       state.answers[qid] = value;
+      saveQuizSession();
       render();
       if (state.currentIndex < state.questions.length - 1) {
         setTimeout(() => {
@@ -829,6 +900,7 @@ function handleAction(e) {
         saveStats();
         saveHistory();
         saveCorrect();
+        clearQuizSession();
         render();
       }
       break;
@@ -878,6 +950,8 @@ function finishQuiz() {
   });
   if (state.history.length > 200) state.history.pop();
   saveHistory();
+
+  clearQuizSession();
 
   // 更新已掌握題目：答對加入、答錯移除
   state.questions.forEach(q => {
