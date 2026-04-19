@@ -15,7 +15,7 @@ function doLogin(u, p) {
 
 function doLogout() {
   sessionStorage.removeItem('toeic_user');
-  Object.assign(state, { view:'login', stats:{}, history:[], correct:new Set(), wrong:new Set() });
+  Object.assign(state, { view:'login', stats:{}, history:[], correct:new Set(), wrong:new Set(), favorites:new Set(), notes:{}, cloudCache:{} });
   render();
 }
 
@@ -51,6 +51,11 @@ function saveExamSession()  {
 function clearExamSession() { const u=getCurrentUser(); if(u) localStorage.removeItem(`toeic_exam_${u}`); }
 
 function getAnyUserSnapshot(username) {
+  const cloud = state.cloudCache[username];
+  if (cloud) {
+    const attempts = Object.values(cloud.stats||{}).reduce((s,v)=>s+(v.attempts||0),0);
+    return { stats:cloud.stats||{}, history:cloud.history||[], masteredCount:(cloud.correct||[]).length, wrongCount:(cloud.wrong||[]).length, attempts };
+  }
   try {
     const stats   = _g(`toeic_stats_${username}`,{});
     const history = _g(`toeic_history_${username}`,[]);
@@ -74,6 +79,7 @@ const state = {
   wrong: new Set(),
   favorites: new Set(),
   notes: {},
+  cloudCache: {},
 };
 
 // ── Shuffle & Priority ─────────────────────────────────────────────────────
@@ -143,6 +149,42 @@ function passageHtml(q) {
     return `<div class="passage-box"><div class="passage-label">📄 ${pd.title} (多篇閱讀)</div>${pd.passages.map(p=>`<div class="sub-passage"><div class="sub-label">${p.label}</div><pre class="passage-text">${p.content}</pre></div>`).join('')}</div>`;
   }
   return '';
+}
+
+// ── Cloud Sync ─────────────────────────────────────────────────────────────
+function cloudSave() {
+  const u = getCurrentUser();
+  if (!u || !window.DB) return;
+  window.DB.saveUser(u, {
+    stats: state.stats,
+    history: state.history,
+    correct: [...state.correct],
+    wrong: [...state.wrong],
+    favorites: [...state.favorites],
+    notes: state.notes
+  });
+}
+
+async function syncFromCloud(username) {
+  if (!window.DB) return;
+  const cloud = await window.DB.loadUser(username);
+  if (!cloud) { cloudSave(); return; }
+  state.stats     = cloud.stats     || state.stats;
+  state.history   = cloud.history   || state.history;
+  state.correct   = new Set(cloud.correct   || [...state.correct]);
+  state.wrong     = new Set(cloud.wrong     || [...state.wrong]);
+  state.favorites = new Set(cloud.favorites || [...state.favorites]);
+  state.notes     = cloud.notes     || state.notes;
+  saveStats(); saveHistory(); saveCorrect(); saveWrong(); saveFavorites(); saveNotes();
+}
+
+async function loadRivalData() {
+  if (!window.DB) return;
+  const me = getCurrentUser();
+  for (const rival of Object.keys(USERS).filter(u=>u!==me)) {
+    const data = await window.DB.loadUser(rival);
+    if (data) state.cloudCache[rival] = data;
+  }
 }
 
 // ── Render Dispatcher ──────────────────────────────────────────────────────
@@ -307,6 +349,7 @@ function renderHome() {
     <div class="changelog-section">
       <h3>📋 版本更新記錄</h3>
       <div class="changelog-list">
+        <div class="changelog-item"><span class="cl-version">v20260419_001</span><span class="cl-desc">接上 Firebase 雲端同步，比分板跨裝置即時同步</span></div>
         <div class="changelog-item"><span class="cl-version">v20260418_006</span><span class="cl-desc">新增筆記功能（錯題與最愛）、刪除錯題、版本更新記錄</span></div>
         <div class="changelog-item"><span class="cl-version">v20260418_005</span><span class="cl-desc">新增一鍵複製題目、我的最愛星星收藏功能</span></div>
         <div class="changelog-item"><span class="cl-version">v20260418_004</span><span class="cl-desc">解析改為條列式，依每個選項逐條顯示</span></div>
@@ -757,17 +800,20 @@ function attachEvents() {
   document.querySelectorAll('.note-textarea').forEach(ta => {
     ta.addEventListener('blur', () => {
       const noteQid = ta.dataset.noteQid;
-      if (noteQid) { state.notes[noteQid] = ta.value; saveNotes(); }
+      if (noteQid) { state.notes[noteQid] = ta.value; saveNotes(); cloudSave(); }
     });
   });
 }
 
-function submitLogin() {
+async function submitLogin() {
   const u = document.getElementById('login-username')?.value.trim()||'';
   const p = document.getElementById('login-password')?.value||'';
   if (doLogin(u,p)) {
     state.stats=loadStats(); state.history=loadHistory(); state.correct=loadCorrect(); state.wrong=loadWrong(); state.favorites=loadFavorites(); state.notes=loadNotes();
     state.view='home'; render();
+    await syncFromCloud(u);
+    await loadRivalData();
+    render();
   } else {
     const err=document.getElementById('login-error'); if(err) err.style.display='block';
   }
@@ -803,7 +849,7 @@ function handleAction(e) {
       state.answers[qid] = value;
       if (value===q.answer) { state.correct.add(q.id); state.wrong.delete(q.id); }
       else { state.wrong.add(q.id); state.correct.delete(q.id); }
-      saveCorrect(); saveWrong();
+      saveCorrect(); saveWrong(); cloudSave();
       state.showResult = true;
       render();
       break;
@@ -864,7 +910,7 @@ function handleAction(e) {
     case 'toggle-favorite': {
       if (state.favorites.has(qid)) { state.favorites.delete(qid); }
       else { state.favorites.add(qid); }
-      saveFavorites();
+      saveFavorites(); cloudSave();
       render();
       break;
     }
@@ -885,7 +931,7 @@ function handleAction(e) {
 
     case 'delete-wrong': {
       state.wrong.delete(qid);
-      saveWrong();
+      saveWrong(); cloudSave();
       render();
       break;
     }
@@ -893,7 +939,7 @@ function handleAction(e) {
     case 'clear-stats':
       if(confirm('確定清除所有記錄？此操作無法復原。')) {
         state.stats={}; state.history=[]; state.correct=new Set(); state.wrong=new Set(); state.favorites=new Set(); state.notes={};
-        saveStats(); saveHistory(); saveCorrect(); saveWrong(); saveFavorites(); saveNotes();
+        saveStats(); saveHistory(); saveCorrect(); saveWrong(); saveFavorites(); saveNotes(); cloudSave();
         clearPracticeSession(); clearExamSession();
         render();
       }
@@ -930,7 +976,7 @@ function finishPractice() {
   const pct = total>0 ? Math.round((correct/total)*100) : 0;
   state.history.unshift({ date:new Date().toISOString(), type:'practice', correct, total, pct });
   if (state.history.length>200) state.history.pop();
-  saveHistory();
+  saveHistory(); cloudSave();
   state.view='home'; render(); window.scrollTo(0,0);
 }
 
@@ -968,7 +1014,7 @@ function finishExam() {
   if(!state.stats['exam']) state.stats['exam']={attempts:0,best:0,last:0};
   state.stats['exam'].attempts++; state.stats['exam'].last=pct;
   if(pct>state.stats['exam'].best) state.stats['exam'].best=pct;
-  saveStats();
+  saveStats(); cloudSave();
   state.view='exam-results'; render(); window.scrollTo(0,0);
 }
 
@@ -997,3 +1043,11 @@ if (bootUser) {
 }
 render();
 checkVersion();
+
+window.addEventListener('db-ready', async () => {
+  const u = getCurrentUser();
+  if (!u) return;
+  await syncFromCloud(u);
+  await loadRivalData();
+  render();
+});
